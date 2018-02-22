@@ -4,6 +4,11 @@
 * Introduction
   
 * JavaScript
+** Equality
+** Arrow Functions
+** "Classes"
+** Promises
+** Generic tooling
 * Web
 
 * Git
