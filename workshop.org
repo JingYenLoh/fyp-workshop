@@ -1,0 +1,9 @@
+#+TITLE: Presentation about random stuff
+#+AUTHOR: Jing Yen Loh
+
+* Introduction
+  
+* JavaScript
+* Web
+
+* Git
