@@ -5,6 +5,68 @@
   
 * JavaScript
 ** Equality
+*** Problem
+    
+    What do you think is gonna happen below?
+    #+BEGIN_SRC js
+    return 1 == 1;
+    #+END_SRC
+
+    #+RESULTS:
+    : true
+
+    What about this?
+    #+BEGIN_SRC js
+    return 1 === 1;
+    #+END_SRC
+
+    #+RESULTS:
+    : true
+   
+    😲 So what's the difference ??!?!?
+   
+    Well, let's try this...
+    #+BEGIN_SRC js
+    return 1 == '1';
+    #+END_SRC
+
+    #+RESULTS:
+    : true
+
+    *Huh?*
+   
+    #+BEGIN_SRC js
+    return 1 == [1];
+    #+END_SRC
+
+    #+RESULTS:
+    : true
+   
+    *!!!*
+    #+NAME: number-compare-boolean
+    #+BEGIN_SRC js
+    return 1 == true; // wat
+    #+END_SRC
+
+    #+RESULTS:
+    : true
+   
+    Ok, ok, we get the point. Why does this happen?
+   
+    In JavaScript, ~==~ is the /abstract equality operator/. When comparing
+    values with ~==~, it converts both values to a common type. As an example,
+    with [[number-compare-boolean]], it converts the ~true~ to a number before
+    comparing.
+   
+    #+BEGIN_SRC js
+      return Number(true)
+    #+END_SRC
+
+    #+RESULTS:
+    : 1
+   
+    So since 1 is equal to 1, ~1 == true~ evaluates to true.
+
 ** Arrow Functions
 ** "Classes"
 ** Promises
