@@ -1,5 +1,6 @@
 #+TITLE: Presentation about random stuff
 #+AUTHOR: Jing Yen Loh
+#+EMAIL: lohjingyen@gmail.com
 
 * Introduction
   
