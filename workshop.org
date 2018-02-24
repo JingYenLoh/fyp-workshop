@@ -99,6 +99,43 @@
     comparison unless you really know what you're doing with ~==~.
 
 ** Arrow Functions
+   Consider the following function:
+   #+BEGIN_SRC js
+     function multiply (x, y) {
+         return x * y;
+     }
+   #+END_SRC
+   
+   - [ ] Something about anonymous
+   
+   Arrow functions were influenced by CoffeeScript, a functional programming
+   language that transpiled into JavaScript.
+   
+   They make simple functions a lot more concise.
+   
+   #+BEGIN_SRC js
+     const multiply = (x, y) => x * y;
+   #+END_SRC
+
+   The difference is particularly apparent when they're passed as arguments e.g.
+   in Promise chains.
+   #+BEGIN_SRC js
+     fetch('www.example.com/api/v3')
+         .then(function (response) {
+             return response.json();
+         })
+         .then(function (json) {
+             console.log(json);
+         })
+
+     /* Versus */
+     fetch('www.example.com/api/v3')
+         .then(response => response.json())
+         .then(json => console.log(json))
+   #+END_SRC
+   
+   But surely they weren't added just for a little syntactic sugar?
+
 ** "Classes"
 ** Promises
 ** Generic tooling
