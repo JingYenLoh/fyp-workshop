@@ -67,6 +67,36 @@
    
     So since 1 is equal to 1, ~1 == true~ evaluates to true.
 
+*** Solution
+    ~===~ is the strict equality operator. If the values are of different types,
+    they're unequal.
+    
+    #+BEGIN_SRC js
+      console.log(1 === '1');
+      console.log(1 === [1]);
+      console.log(1 === true);
+      return (undefined === null);
+    #+END_SRC
+
+    #+RESULTS:
+    : false
+    : false
+    : false
+    : false
+    
+    Well, most of the time anyway. You still get magical edge
+    cases like this.
+    
+    #+BEGIN_SRC js
+      return NaN === NaN;
+    #+END_SRC
+
+    #+RESULTS:
+    : false
+    
+    TLDR; with JavaScript, *ALWAYS* use the strict equality operator (~===~) for
+    comparison unless you really know what you're doing with ~==~.
+
 ** Arrow Functions
 ** "Classes"
 ** Promises
