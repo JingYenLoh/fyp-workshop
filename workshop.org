@@ -139,6 +139,8 @@
 ** "Classes"
 ** Promises
 ** Generic tooling
+*** ESLint
+*** Webpack
 * Web
 
 * Git
