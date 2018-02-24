@@ -131,11 +131,11 @@ But surely they weren't added just for a little syntactic sugar?
 
 ### ESLint<a id="sec-2-5-1"></a>
 
-Fundamentally, ESLint is a utility that enforces a collection of rules (a style guide) that your code needs to adhere to. By enforcing these set of rules, ESLint is able to catch errors that you might have failed to notice when writing JS (e.g. a dangling comma, syntax errors, accidental globals). 
+Fundamentally, ESLint is a utility that enforces a collection of rules (a style guide) that your JS code needs to adhere to. By enforcing these set of rules, ESLint is able to catch errors that you might have failed to notice when writing JS (e.g. a dangling comma, syntax errors, accidental globals). 
 
-ESLint further enforces the formatting conventions of your code, prompting you to write code in a uniform fashion that you and your teammates can easily understand and maintain.
+ESLint further enforces code formatting conventions, prompting you to write code in a uniform fashion that can be easily understood and maintained by your team.
 
-Moreover, ESLint is plugin based and different kinds of style guides can be configured for your project to catch JS errors and enforce formatting conventions. 
+Moreover, ESLint is plugin based, and hence, different kinds of style guides can be configured for your project to catch JS errors and enforce formatting conventions. 
 
 Here's a quick look of ESLint in action in Visual Studio Code:
 
