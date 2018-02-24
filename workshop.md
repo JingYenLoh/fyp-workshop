@@ -162,15 +162,15 @@ console.log(file);
 });
 ```
 
-As you can see above, everybody have different conventions/approaches to writing and formatting their code. This introduces the issue of inconsistency as every member's code is formatted differently (and the code might be inefficient like noob-arse's unused `fileCopy` variable). 
+As you can see above, everybody has different conventions/approaches to writing and formatting their code. This introduces the issue of inconsistency as every member's code is formatted differently (and the code might be inefficient like noob-arse's unused `fileCopy` variable). 
 
-With the abovemetioned example, wouldn't it be more productive if everyone adheres to a style guide, aka, a unified set of coding and formatting rules? Wouldn't we want to achieve a production ready, maintainable, quality code base?
+With the abovemetioned example, wouldn't it be more productive if everyone adheres to a style guide, aka, a unified set of coding and formatting rules? Wouldn't we want to achieve a production ready, maintainable and quality code base?
 
-Enter ESLint, a utility that checks if your JS syntax adheres to a particular style guide agreed on by your team. If your code does not meet the requirements of your style guide, you will get those pesky red underlines that you see when you write incorrect syntax in your favourite IDE, this is your cue to write quality code boi.
+Enter ESLint, a utility that checks if your JS syntax adheres to a particular style guide agreed on by your team. If your code does not meet the requirements of your style guide, you will get those pesky red underlines that you see when you write incorrect syntax in your favourite IDE. This is your cue to write quality code boi.
 
-ESLint is plugin based too, so you can choose from the various style guides in the open source community (e.g. JS Standard, AirBnb style, etc), or create your own style guide to enforce in your project.
+ESLint is plugin based too, so you can choose from the various style guides offered by the open source community (e.g. JS Standard, AirBnb style, etc), or create your own style guide to enforce in your team's project.
 
-So to recap, ESLint is a utility that is used to ensure uniformity in your project's code base by making sure that the code written matches the rules of your project's style guide. This way, we can achieve a quality code base that can be well understood and maintained. 
+So to recap, ESLint is a utility that ensures uniformity in your project's code base by making sure that the code written meets the rules of a particular style guide. This way, we can achieve a quality code base that can be well understood and maintained. 
 
 ### Webpack<a id="sec-2-5-2"></a>
 
