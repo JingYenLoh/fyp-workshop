@@ -131,46 +131,17 @@ But surely they weren't added just for a little syntactic sugar?
 
 ### ESLint<a id="sec-2-5-1"></a>
 
-Before we get into ESLint, let's consider a common scenario that you might face while developing a project in a team:
+Fundamentally, ESLint is a utility that enforces a collection of rules (a style guide) that your code needs to adhere to. By enforcing these set of rules, ESLint is able to catch errors that you might have failed to notice when writing JS (e.g. a dangling comma, syntax errors, accidental globals). 
 
-```js
-// You
-console.log('Hello')
+ESLint further enforces the formatting conventions of your code, prompting you to write code in a uniform fashion that you and your teammates can easily understand and maintain.
 
-// Read 'names.txt' from file system and log result in console
-fs.readFile('names.txt', function (file, err) {
-    if (err) {
-        throw err
-    }
-    console.log(file)
-})
-```
+Moreover, ESLint is plugin based and different kinds of style guides can be configured for your project to catch JS errors and enforce formatting conventions. 
 
-```js
-// Your team member, noob-arse
-console.log('Hello');
+Here's a quick look of ESLint in action in Visual Studio Code:
 
-// wtf with this unused declaration
-var fileCopy;
+![alt text](images/eslint-in-action.png "ESLint catches an unexpected trailing comma")
 
-// Read 'names.txt' from file system and log result in console
-fs.readFile('names.txt', function (file, err) {
-if (err) {
-    throw err;
-}
-console.log(file);
-});
-```
-
-As you can see above, everybody has different conventions/approaches to writing and formatting their code. This introduces the issue of inconsistency as every member's code is formatted differently (and the code might be inefficient like noob-arse's unused `fileCopy` variable). 
-
-With the abovemetioned example, wouldn't it be more productive if everyone adheres to a style guide, aka, a unified set of coding and formatting rules? Wouldn't we want to achieve a production ready, maintainable and quality code base?
-
-Enter ESLint, a utility that checks if your JS syntax adheres to a particular style guide agreed on by your team. If your code does not meet the requirements of your style guide, you will get those pesky red underlines that you see when you write incorrect syntax in your favourite IDE. This is your cue to write quality code boi.
-
-ESLint is plugin based too, so you can choose from the various style guides offered by the open source community (e.g. JS Standard, AirBnb style, etc), or create your own style guide to enforce in your team's project.
-
-So to recap, ESLint is a utility that ensures uniformity in your project's code base by making sure that the code written meets the rules of a particular style guide. This way, we can achieve a quality code base that can be well understood and maintained. 
+To sum up, ESLint is a utility implemeted in JS projects to ensure that the code you write meets the rules it enforces, so as to keep your code base consistent and as error free as possbile.
 
 ### Webpack<a id="sec-2-5-2"></a>
 
