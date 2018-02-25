@@ -4,4 +4,18 @@ This contains the materials for my Final Year Project preparation workshop. This
 was designed for my FYP team but hopefully will be of use to other interested
 groups as well.
 
+* Topic considerations
+  Topics were selected with the following considerations in mind:
+  - applicable to FYP
+  - Useful to average attendee
+  - Equip attendee with fundamentals to explore and learn further by themselves
+  
+  Therefore, specific frameworks (e.g. React, Vue, Express etc.) are
+  are intentionally ommitted. Instead, this workshop aims to cover the
+  fundamentals necessary for attendees to easily pick up such frameworks simply
+  by reading the documentation.
+  
+  Please do propose new topics if you feel they are relevant based on personal
+  experience.
+     
 * TODO To be determined
