@@ -5,7 +5,7 @@
 * Introduction
   
 * JavaScript
-** Closures + let & const
+** Scopes + let & const
    In ES6, 2 new keywords were introduced, ~let~ and ~const~.
    
    Similar to ~var~, they're used for variable declarations.
@@ -70,6 +70,54 @@
    and keep ~const~ alongside that?
    
    We have to go a little deeper.
+*** Scopes
+    In computer science, a closure is a...
+    #+BEGIN_VERSE
+    technique for implementing lexically scoped name binding
+    in a language with first-class functions -- Wikipedia
+    #+END_VERSE
+    
+    *What* is that nonsense?!?!?! Ok, ok, let's ignore the wikipedia definitions
+    today. Here's something that's a little different from C# or Java:
+    /variables in JavaScript are actually "function scoped"./
+    
+    #+BEGIN_SRC js
+      function aThousand () {
+          for (var i = 0; i < 1000; i++) {
+              // Do nothing, I'm just gonna use
+              // a for loop to illustrate
+          }
+          return i;
+      }
+
+      return aThousand();
+    #+END_SRC
+    
+    The reason that was possible is because the /scope/ of ~i~ wasn't just
+    limited to the for loop, it's actually a declaration that can be accessed
+    within the function itself.
+    
+    It turns out that a fuction is a *closure* in JS. Think of it as the
+    function being the thing that creates a /scope/.
+    
+    This is a little different from languages you're probably used to, like C#.
+    #+BEGIN_SRC csharp
+    int AThousand()
+    {
+        for (var i = 0; i < 1000; i++)
+        {
+            // Do nothing
+        }
+        return i; // The name 'i' does not exist in the current context
+    }
+    #+END_SRC
+    
+    I'm waving my hand with a lot of magic here, but essentially think of
+    variables in these language as ~{}~ scoped, that is to say, a pair of curly
+    braces forms a scope.
+    
+    Thus, one reason ~let~ and ~const~ were introduced was to make things more
+    predictable to people who are already accustomed to such languages.
 ** Equality
 *** Problem
     
