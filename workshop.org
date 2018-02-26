@@ -118,6 +118,11 @@
     
     Thus, one reason ~let~ and ~const~ were introduced was to make things more
     predictable to people who are already accustomed to such languages.
+*** Personal preference
+    I use ~const~ almost exclusively, unless I know I explicitly want a mutable
+    reference, in which case I use ~let~. I find this helps me reason about my
+    code better. YMMV.
+    
 ** Equality
 *** Problem
     
