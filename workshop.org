@@ -5,6 +5,55 @@
 * Introduction
   
 * JavaScript
+** Closures + let & const
+   In ES6, 2 new keywords were introduced, ~let~ and ~const~.
+   
+   Similar to ~var~, they're used for variable declarations.
+   #+BEGIN_SRC js
+     let x = 666000;
+     const y = 420;
+
+     return x + y;
+   #+END_SRC
+
+   ~const~ is similar to the ~const~ you've seen in C#, where the value of the
+   constant cannot be changed through re-assignment, and it cannot be
+   redeclared. Here's a little snippet directly copy pasted from MDN to
+   illustrate what I mean.
+   #+BEGIN_SRC js
+     const number = 42;
+
+     try {
+         number = 99;
+     } catch(err) {
+         console.log(err);
+         // expected output: TypeError: invalid assignment to const `number'
+         // Note - error messages will vary depending on browser
+     }
+
+     console.log(number);
+     // expected output: 42
+   #+END_SRC
+   
+   One common misconception, however, is that ~const~ makes the value it holds
+   immutable (meaning it cannot be modified). This is *not true*.
+   #+BEGIN_SRC js
+     const arr = [1, 2, 3, 4, 5];
+
+     arr.push(6);
+
+     return arr; // returns [1, 2, 3, 4, 5, 6]
+   #+END_SRC
+   With ~const~, you're still able to mutate the value it's holding. You simply
+   can't change the /reference/.
+   #+BEGIN_SRC js
+     const arr = [1, 2, 3, 4, 5];
+
+     let copy = [...arr, 6];
+
+     arr = copy; // TypeError: Assignment to constant variable
+   #+END_SRC
+
 ** Equality
 *** Problem
     
