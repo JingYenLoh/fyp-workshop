@@ -54,6 +54,22 @@
      arr = copy; // TypeError: Assignment to constant variable
    #+END_SRC
 
+   ~let~ works similarly to ~var~, allowing you to modify references.
+   #+BEGIN_SRC js
+     let x = 1;
+     console.log(x);
+
+     x = 'chicken';
+     console.log(x);
+
+     x = ['1', '2', '3', '4', '5'].map(parseInt);
+     return x;
+   #+END_SRC
+   
+   Wait... if so.... what's the purpose of ~let~? Why not just keep using ~var~,
+   and keep ~const~ alongside that?
+   
+   We have to go a little deeper.
 ** Equality
 *** Problem
     
