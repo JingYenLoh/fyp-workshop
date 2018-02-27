@@ -303,7 +303,7 @@
     Back in the olden days, we used to include javascript files using the
     ~<script>~ tag.
     #+BEGIN_SRC html
-      <script src="some-file-somewhere.js'></script>
+      <script src="some-file-somewhere.js"></script>
     #+END_SRC
     
     If we have a bunch of scripts, they'd end up something like this. The below
@@ -360,13 +360,13 @@
     
     Here's the source for ~index.js~ for Express.
     #+BEGIN_SRC js
-      /*!
-       ,* express
-       ,* Copyright(c) 2009-2013 TJ Holowaychuk
-       ,* Copyright(c) 2013 Roman Shtylman
-       ,* Copyright(c) 2014-2015 Douglas Christopher Wilson
-       ,* MIT Licensed
-       ,*/
+      /*
+       * express
+       * Copyright(c) 2009-2013 TJ Holowaychuk
+       * Copyright(c) 2013 Roman Shtylman
+       * Copyright(c) 2014-2015 Douglas Christopher Wilson
+       * MIT Licensed
+       */
 
       'use strict';
 
