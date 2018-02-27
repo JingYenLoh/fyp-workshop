@@ -295,7 +295,7 @@
     code you write meets the rules it enforces, so as to keep your code base
     consistent and as error free as possbile.
     
-*** TODO Webpack
+*** Webpack
     In the context of JS projects, Webpack is a module bundler that travels a
     project, forming a graph of its dependencies, then bundling all these
     dependencies into a bundle to be served to users.
