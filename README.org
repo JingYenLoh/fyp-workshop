@@ -11,7 +11,7 @@ groups as well.
   - Equip attendee with fundamentals to explore and learn further by themselves
   
   Therefore, specific frameworks (e.g. React, Vue, Express etc.) are
-  are intentionally ommitted. Instead, this workshop aims to cover the
+  intentionally ommitted. Instead, this workshop aims to cover the
   fundamentals necessary for attendees to easily pick up such frameworks simply
   by reading the documentation.
   

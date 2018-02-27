@@ -1,19 +1,20 @@
-- [Introduction](#sec-1)
-- [JavaScript](#sec-2)
-  - [Equality](#sec-2-1)
-    - [Problem](#sec-2-1-1)
-    - [Solution](#sec-2-1-2)
-  - [Arrow Functions](#sec-2-2)
-  - ["Classes"](#sec-2-3)
-  - [Promises](#sec-2-4)
-  - [Generic tooling](#sec-2-5)
-    - [ESLint](#sec-2-5-1)
-    - [Webpack](#sec-2-5-2)
-- [Web](#sec-3)
-- [Git](#sec-4)
-
+* [Introduction](#sec-1)
+* [JavaScript](#sec-2)
+  * [Equality](#sec-2-1)
+    * [Problem](#sec-2-1-1)
+    * [Solution](#sec-2-1-2)
+  * [Arrow Functions](#sec-2-2)
+  * ["Classes"](#sec-2-3)
+  * [Promises](#sec-2-4)
+  * [Generic tooling](#sec-2-5)
+    * [ESLint](#sec-2-5-1)
+    * [Webpack](#sec-2-5-2)
+* [Web](#sec-3)
+* [Git](#sec-4)
 
 # Introduction<a id="sec-1"></a>
+
+The aim of this workshop is to introduce key concepts and benefits of a programming language.
 
 # JavaScript<a id="sec-2"></a>
 
@@ -38,7 +39,7 @@ return 1 === 1;
 Well, let's try this&#x2026;
 
 ```js
-return 1 == '1';
+return 1 == "1";
 ```
 
 **Huh?**
@@ -57,12 +58,12 @@ return 1 == true; // wat
 
 Ok, ok, we get the point. Why does this happen?
 
-In JavaScript, `==` is the *abstract equality operator*. When comparing values
+In JavaScript, `==` is the _abstract equality operator_. When comparing values
 with `==`, it converts both values to a common type. As an example, with
 [5](#org793ab51), it converts the `true` to a number before comparing.
 
 ```js
-return Number(true)
+return Number(true);
 ```
 
 So since 1 is equal to 1, `1 == true` evaluates to true.
@@ -72,10 +73,10 @@ So since 1 is equal to 1, `1 == true` evaluates to true.
 `===` is the strict equality operator. If the values are of different types, they're unequal.
 
 ```js
-console.log(1 === '1');
+console.log(1 === "1");
 console.log(1 === [1]);
 console.log(1 === true);
-return (undefined === null);
+return undefined === null;
 ```
 
 Well, most of the time anyway. You still get magical edge cases like this.
@@ -92,12 +93,12 @@ comparison unless you really know what you're doing with `==`.
 Consider the following function:
 
 ```js
-function multiply (x, y) {
-    return x * y;
+function multiply(x, y) {
+  return x * y;
 }
 ```
 
--   [ ] Something about anonymous
+* [ ] Something about anonymous
 
 Arrow functions were influenced by CoffeeScript, a functional programming language that transpiled into JavaScript.
 
@@ -110,23 +111,31 @@ const multiply = (x, y) => x * y;
 The difference is particularly apparent when they're passed as arguments e.g. in Promise chains.
 
 ```js
-fetch('www.example.com/api/v3')
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (json) {
-        console.log(json);
-    })
+fetch("www.example.com/api/v3")
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(json) {
+    console.log(json);
+  });
 
 /* Versus */
-fetch('www.example.com/api/v3')
-    .then(response => response.json())
-    .then(json => console.log(json))
+fetch("www.example.com/api/v3")
+  .then(response => response.json())
+  .then(json => console.log(json));
 ```
 
 But surely they weren't added just for a little syntactic sugar?
 
 ## "Classes"<a id="sec-2-3"></a>
+
+Classes in Javascript was first introduced in ECMAScript® 2015. They are essentially **syntactical sugar**
+over Javascript's inheritance with prototype chaining. A reason why you would consider using ES6 Classes
+is almostly due to cleaner and simpler syntax. Will there be performance differences (In a positive note)?
+Probably the ECMAScript engine rendering the Javascript codes will be able to optimize a little better but 
+there will probably be little to no significant difference in the way the script performs. Another reason 
+why you should Classes is due to the fact that it is much easier to set up inheritance using the new ES6
+syntax.
 
 ## Promises<a id="sec-2-4"></a>
 
