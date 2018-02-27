@@ -376,6 +376,15 @@
     From here, it'll continue on into ~./lib/express~ and on and on, until it
     finally has everything it needs. It'll then bundle all this stuff up.
     
+    Webpack's capabilities aren't simply limited to bundling. Another very
+    popular feature is Hot Module Replacement, where it can "hotswap" modules
+    while the application is still running, without needing a full reload. This
+    speeds up development *tremendously*. Remember when you were doing ASP .NET
+    Core, and you had to restart every time you made a change to the server
+    code? Webpack is able to swap those out without restarting. In fact, you can
+    configure Webpack to reload your application as soon as you save your
+    changes.
+    
     In Node.js projects nowadays, Webpack is often pre-configured in many
     templates. For example, the cli tool ~create-react-app~ allows you to
     generate a React project with a all the webpack configuration done.
