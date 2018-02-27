@@ -295,7 +295,92 @@
     code you write meets the rules it enforces, so as to keep your code base
     consistent and as error free as possbile.
     
-*** Webpack
+*** TODO Webpack
+    In the context of JS projects, Webpack is a module bundler that travels a
+    project, forming a graph of its dependencies, then bundling all these
+    dependencies into a bundle to be served to users.
+    
+    Back in the olden days, we used to include javascript files using the
+    ~<script>~ tag.
+    #+BEGIN_SRC html
+      <script src="some-file-somewhere.js'></script>
+    #+END_SRC
+    
+    If we have a bunch of scripts, they'd end up something like this. The below
+    example is stolen from our beloved WebA project, including the ~link~ tags
+    as well.
+    #+BEGIN_SRC html
+      <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+      <link href="~/lib/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet" /> 
+      <link href="~/css/site.css" rel="stylesheet" />
+      <link rel="stylesheet" href="~/css/sticky_footer.css" />
+      <link href="~/lib/noty/lib/noty.css" rel="stylesheet" />
+      <link href="~/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet"/>
+      <link href="~/lib/DataTables-1.10.16/css/jquery.dataTables.css" rel="stylesheet"/>
+      <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+      <link href="~/lib/bootstrap-timepicker/css/timepicker.css" rel="stylesheet"/>
+
+
+      <script src="~/lib/jquery/dist/jquery.js"></script>
+      <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+      <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+      <script src="~/lib/js-cookie/src/js.cookie.js"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+      <script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+      <script src="~/lib/noty/lib/noty.js"></script>
+      <script src="~/lib/moment/min/moment.min.js"></script>
+      <script src="~/lib/he/he.js"></script>
+      <script src="~/lib/bootstrap-table-contextmenu/dist/bootstrap-table-contextmenu.min.js"></script>
+      <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+      <script src="~/lib/DataTables-1.10.16/js/jquery.dataTables.js"></script>
+      <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+      <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    #+END_SRC
+    
+    WebA was a simple project if you compare it to the scale of web applications
+    that are around. Have you ever inspected the source of some older ecommerce
+    site and seen 30 script tags alone?
+    
+    Each script ends up adding something else to the global scope. I'm not going
+    in depth into why this is bad, but just know that this potentially causes
+    some problems and conflicts.
+    
+    This is one of the problem that webpack solves. Now, instead of including
+    script files one by one, webpack builds a /dependency graph/ from all the
+    modules you /require/, starting from an entry point.
+    #+BEGIN_SRC js
+      // app.js
+      const express = require('express');
+
+      const app = express();
+    #+END_SRC
+    In the above example, let's assume app.js was the entry point for Webpack.
+    With the ~require~, Webpack now knows this app /requires/ express. It'll go
+    into express and look into the library.
+    
+    Here's the source for ~index.js~ for Express.
+    #+BEGIN_SRC js
+      /*!
+       ,* express
+       ,* Copyright(c) 2009-2013 TJ Holowaychuk
+       ,* Copyright(c) 2013 Roman Shtylman
+       ,* Copyright(c) 2014-2015 Douglas Christopher Wilson
+       ,* MIT Licensed
+       ,*/
+
+      'use strict';
+
+      module.exports = require('./lib/express');
+    #+END_SRC
+
+    From here, it'll continue on into ~./lib/express~ and on and on, until it
+    finally has everything it needs. It'll then bundle all this stuff up.
+    
+    In Node.js projects nowadays, Webpack is often pre-configured in many
+    templates. For example, the cli tool ~create-react-app~ allows you to
+    generate a React project with a all the webpack configuration done.
+    Generally, it's unlikely you'll need to configure Webpack manually (thank
+    god) but it's always helpful to know how things are bundled together.
 * Web
 
 * Git
