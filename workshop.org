@@ -2,552 +2,832 @@
 #+AUTHOR: Jing Yen Loh
 #+EMAIL: lohjingyen@gmail.com
 
-* Introduction
-  
-* JavaScript
-** Scopes + let & const
-   In ES6, 2 new keywords were introduced, ~let~ and ~const~.
+* Scopes + let & const
+  In ES6, 2 new keywords were introduced, ~let~ and ~const~.
    
-   Similar to ~var~, they're used for variable declarations.
-   #+BEGIN_SRC js
-     let x = 666000;
-     const y = 420;
+  Similar to ~var~, they're used for variable declarations.
+  #+BEGIN_SRC js
+    let x = 666000;
+    const y = 420;
 
-     return x + y;
+    return x + y;
+  #+END_SRC
+
+  ~const~ is similar to the ~const~ you've seen in C#, where the value of the
+  constant cannot be changed through re-assignment, and it cannot be
+  redeclared. Here's a little snippet directly copy pasted from MDN to
+  illustrate what I mean.
+  #+BEGIN_SRC js
+    const number = 42;
+
+    try {
+        number = 99;
+    } catch(err) {
+        console.log(err);
+        // expected output: TypeError: invalid assignment to const `number'
+        // Note - error messages will vary depending on browser
+    }
+
+    console.log(number);
+    // expected output: 42
+  #+END_SRC
+   
+  One common misconception, however, is that ~const~ makes the value it holds
+  immutable (meaning it cannot be modified). This is *not true*.
+  #+BEGIN_SRC js
+    const arr = [1, 2, 3, 4, 5];
+
+    arr.push(6);
+
+    return arr; // returns [1, 2, 3, 4, 5, 6]
+  #+END_SRC
+  With ~const~, you're still able to mutate the value it's holding. You simply
+  can't change the /reference/.
+  #+BEGIN_SRC js
+    const arr = [1, 2, 3, 4, 5];
+
+    let copy = [...arr, 6];
+
+    arr = copy; // TypeError: Assignment to constant variable
+  #+END_SRC
+
+  ~let~ works similarly to ~var~, allowing you to modify references.
+  #+BEGIN_SRC js
+    let x = 1;
+    console.log(x);
+
+    x = 'chicken';
+    console.log(x);
+
+    x = ['1', '2', '3', '4', '5'].map(parseInt);
+    return x;
+  #+END_SRC
+   
+  Wait... if so.... what's the purpose of ~let~? Why not just keep using ~var~,
+  and keep ~const~ alongside that?
+   
+  We have to go a little deeper.
+** Scopes
+   In computer science, a closure is a...
+   #+BEGIN_VERSE
+   technique for implementing lexically scoped name binding
+   in a language with first-class functions -- Wikipedia
+   #+END_VERSE
+    
+   *What* is that nonsense?!?!?! Ok, ok, let's ignore the wikipedia definitions
+   today. Here's something that's a little different from C# or Java:
+   /variables in JavaScript are actually "function scoped"./
+    
+   #+BEGIN_SRC js
+     function aThousand () {
+         for (var i = 0; i < 1000; i++) {
+             // Do nothing, I'm just gonna use
+             // a for loop to illustrate
+         }
+         return i;
+     }
+
+     return aThousand();
+   #+END_SRC
+    
+   The reason that was possible is because the /scope/ of ~i~ wasn't just
+   limited to the for loop, it's actually a declaration that can be accessed
+   within the function itself.
+    
+   It turns out that a fuction is a *closure* in JS. Think of it as the
+   function being the thing that creates a /scope/.
+    
+   This is a little different from languages you're probably used to, like C#.
+   #+BEGIN_SRC csharp
+   int AThousand()
+   {
+       for (var i = 0; i < 1000; i++)
+       {
+           // Do nothing
+       }
+       return i; // The name 'i' does not exist in the current context
+   }
+   #+END_SRC
+    
+   I'm waving my hand with a lot of magic here, but essentially think of
+   variables in these language as ~{}~ scoped, that is to say, a pair of curly
+   braces forms a scope.
+    
+   Thus, one reason ~let~ and ~const~ were introduced was to make things more
+   predictable to people who are already accustomed to such languages.
+** Personal preference
+   I use ~const~ almost exclusively, unless I know I explicitly want a mutable
+   reference, in which case I use ~let~. I find this helps me reason about my
+   code better. YMMV.
+    
+* Equality
+** Problem
+    
+   What do you think is gonna happen below?
+   #+BEGIN_SRC js
+   return 1 == 1;
    #+END_SRC
 
-   ~const~ is similar to the ~const~ you've seen in C#, where the value of the
-   constant cannot be changed through re-assignment, and it cannot be
-   redeclared. Here's a little snippet directly copy pasted from MDN to
-   illustrate what I mean.
+   #+RESULTS:
+   : true
+
+   What about this?
    #+BEGIN_SRC js
-     const number = 42;
+   return 1 === 1;
+   #+END_SRC
+
+   #+RESULTS:
+   : true
+   
+   😲 So what's the difference ??!?!?
+   
+   Well, let's try this...
+   #+BEGIN_SRC js
+   return 1 == '1';
+   #+END_SRC
+
+   #+RESULTS:
+   : true
+
+   *Huh?*
+   
+   #+BEGIN_SRC js
+   return 1 == [1];
+   #+END_SRC
+
+   #+RESULTS:
+   : true
+   
+   *!!!*
+   #+NAME: number-compare-boolean
+   #+BEGIN_SRC js
+   return 1 == true; // wat
+   #+END_SRC
+
+   #+RESULTS:
+   : true
+   
+   Ok, ok, we get the point. Why does this happen?
+   
+   In JavaScript, ~==~ is the /abstract equality operator/. When comparing
+   values with ~==~, it converts both values to a common type. As an example,
+   with [[number-compare-boolean]], it converts the ~true~ to a number before
+   comparing.
+   
+   #+BEGIN_SRC js
+     return Number(true)
+   #+END_SRC
+
+   #+RESULTS:
+   : 1
+   
+   So since 1 is equal to 1, ~1 == true~ evaluates to true.
+
+** Solution
+   ~===~ is the strict equality operator. If the values are of different types,
+   they're unequal.
+    
+   #+BEGIN_SRC js
+     console.log(1 === '1');
+     console.log(1 === [1]);
+     console.log(1 === true);
+     return (undefined === null);
+   #+END_SRC
+
+   #+RESULTS:
+   : false
+   : false
+   : false
+   : false
+    
+   Well, most of the time anyway. You still get magical edge
+   cases like this.
+    
+   #+BEGIN_SRC js
+     return NaN === NaN;
+   #+END_SRC
+
+   #+RESULTS:
+   : false
+    
+   TLDR; with JavaScript, *ALWAYS* use the strict equality operator (~===~) for
+   comparison unless you really know what you're doing with ~==~.
+
+** Examples
+   Therefore, avoid writing things like
+   #+BEGIN_SRC js
 
      try {
-         number = 99;
-     } catch(err) {
-         console.log(err);
-         // expected output: TypeError: invalid assignment to const `number'
-         // Note - error messages will vary depending on browser
+         var supposedToBeInt = someApiYouCantGuaranteeDatatypeOf(); // supposedToBeInt was actually '420'
+         if (supposedToBeInt == 420) { // Please use strict equality here !!
+             // Do the right stuff
+         } else {
+             throw new Error(`Hey, it wasn't 420 !!`);
+         }
+     } catch (e) {
+         console.error(e);
      }
-
-     console.log(number);
-     // expected output: 42
    #+END_SRC
-   
-   One common misconception, however, is that ~const~ makes the value it holds
-   immutable (meaning it cannot be modified). This is *not true*.
-   #+BEGIN_SRC js
-     const arr = [1, 2, 3, 4, 5];
-
-     arr.push(6);
-
-     return arr; // returns [1, 2, 3, 4, 5, 6]
-   #+END_SRC
-   With ~const~, you're still able to mutate the value it's holding. You simply
-   can't change the /reference/.
-   #+BEGIN_SRC js
-     const arr = [1, 2, 3, 4, 5];
-
-     let copy = [...arr, 6];
-
-     arr = copy; // TypeError: Assignment to constant variable
-   #+END_SRC
-
-   ~let~ works similarly to ~var~, allowing you to modify references.
-   #+BEGIN_SRC js
-     let x = 1;
-     console.log(x);
-
-     x = 'chicken';
-     console.log(x);
-
-     x = ['1', '2', '3', '4', '5'].map(parseInt);
-     return x;
-   #+END_SRC
-   
-   Wait... if so.... what's the purpose of ~let~? Why not just keep using ~var~,
-   and keep ~const~ alongside that?
-   
-   We have to go a little deeper.
-*** Scopes
-    In computer science, a closure is a...
-    #+BEGIN_VERSE
-    technique for implementing lexically scoped name binding
-    in a language with first-class functions -- Wikipedia
-    #+END_VERSE
     
-    *What* is that nonsense?!?!?! Ok, ok, let's ignore the wikipedia definitions
-    today. Here's something that's a little different from C# or Java:
-    /variables in JavaScript are actually "function scoped"./
-    
-    #+BEGIN_SRC js
-      function aThousand () {
-          for (var i = 0; i < 1000; i++) {
-              // Do nothing, I'm just gonna use
-              // a for loop to illustrate
-          }
-          return i;
-      }
-
-      return aThousand();
-    #+END_SRC
-    
-    The reason that was possible is because the /scope/ of ~i~ wasn't just
-    limited to the for loop, it's actually a declaration that can be accessed
-    within the function itself.
-    
-    It turns out that a fuction is a *closure* in JS. Think of it as the
-    function being the thing that creates a /scope/.
-    
-    This is a little different from languages you're probably used to, like C#.
-    #+BEGIN_SRC csharp
-    int AThousand()
-    {
-        for (var i = 0; i < 1000; i++)
-        {
-            // Do nothing
-        }
-        return i; // The name 'i' does not exist in the current context
+* Arrow Functions
+  Consider the following function:
+  #+NAME: normal-js-function-example
+  #+BEGIN_SRC js
+    function multiply (x, y) {
+        return x * y;
     }
-    #+END_SRC
-    
-    I'm waving my hand with a lot of magic here, but essentially think of
-    variables in these language as ~{}~ scoped, that is to say, a pair of curly
-    braces forms a scope.
-    
-    Thus, one reason ~let~ and ~const~ were introduced was to make things more
-    predictable to people who are already accustomed to such languages.
-*** Personal preference
-    I use ~const~ almost exclusively, unless I know I explicitly want a mutable
-    reference, in which case I use ~let~. I find this helps me reason about my
-    code better. YMMV.
-    
-** Equality
-*** Problem
-    
-    What do you think is gonna happen below?
-    #+BEGIN_SRC js
-    return 1 == 1;
-    #+END_SRC
-
-    #+RESULTS:
-    : true
-
-    What about this?
-    #+BEGIN_SRC js
-    return 1 === 1;
-    #+END_SRC
-
-    #+RESULTS:
-    : true
+  #+END_SRC
    
-    😲 So what's the difference ??!?!?
+  Arrow functions were influenced by some other programming languages where
+  they'd been working well. All arrow functions are anonymous, which gives it
+  some rather interesting properties but unfortunately will not be covered in
+  this talk (ask me more if interested!).
    
-    Well, let's try this...
-    #+BEGIN_SRC js
-    return 1 == '1';
-    #+END_SRC
+  They make simple functions a lot more concise.
+   
+  #+NAME: arrow-function-example
+  #+BEGIN_SRC js
+    const multiply = (x, y) => x * y;
+  #+END_SRC
 
-    #+RESULTS:
-    : true
+  The difference is particularly apparent when they're passed as arguments e.g.
+  in Promise chains.
+  #+NAME: promise-chain-comparison
+  #+BEGIN_SRC js
+    fetch('www.example.com/api/v3')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            console.log(json);
+        })
 
-    *Huh?*
+    /* Versus */
+    fetch('www.example.com/api/v3')
+        .then(response => response.json())
+        .then(json => console.log(json))
+  #+END_SRC
    
-    #+BEGIN_SRC js
-    return 1 == [1];
-    #+END_SRC
-
-    #+RESULTS:
-    : true
+  But surely they weren't added just for syntactic sugar? We already have
+  anonymous functions, so what's the purpose of this funny looking arrow thing
+  besides saving some lines?
    
-    *!!!*
-    #+NAME: number-compare-boolean
-    #+BEGIN_SRC js
-    return 1 == true; // wat
-    #+END_SRC
-
-    #+RESULTS:
-    : true
-   
-    Ok, ok, we get the point. Why does this happen?
-   
-    In JavaScript, ~==~ is the /abstract equality operator/. When comparing
-    values with ~==~, it converts both values to a common type. As an example,
-    with [[number-compare-boolean]], it converts the ~true~ to a number before
-    comparing.
-   
-    #+BEGIN_SRC js
-      return Number(true)
-    #+END_SRC
-
-    #+RESULTS:
-    : 1
-   
-    So since 1 is equal to 1, ~1 == true~ evaluates to true.
-
-*** Solution
-    ~===~ is the strict equality operator. If the values are of different types,
-    they're unequal.
+** ~this~
+   +Remember-when-we-talked-about-how-functions-formed-a-/scope/-earlier?-It+
+   +turns-out-that-variables-aren't-the-only-thing-that-a-function-scope+
+   +encloses.-The-~this~-keyword-refers-to-the-/execution-context/-of-the+
+   +function,-and-is-one-of-the-things-that-are-bound+
     
-    #+BEGIN_SRC js
-      console.log(1 === '1');
-      console.log(1 === [1]);
-      console.log(1 === true);
-      return (undefined === null);
-    #+END_SRC
-
-    #+RESULTS:
-    : false
-    : false
-    : false
-    : false
+   After very careful consideration, I've decided not to dive into the details
+   of how ~this~ works. It's one of the most confusing parts of JavaScript, and
+   I don't feel confident I can convey all the rules within this time frame.
     
-    Well, most of the time anyway. You still get magical edge
-    cases like this.
-    
-    #+BEGIN_SRC js
-      return NaN === NaN;
-    #+END_SRC
+   I'd like to sum it up as "it's complicated":
+   1. If the ~new~ keyword is used when calling the function, ~this~ inside the function is a brand new object.
+   2. If ~apply~, ~call,~ or ~bind~ are used to call a function, ~this~ inside the function is the object that is passed in as the argument.
+   3. If a function is called as a method — that is, if dot notation is used to invoke the function, ~this~ is the object that the function is a property of. In other words, when a dot is to the left of a function invocation, ~this~ is the object to the left of the dot. (ƒ symbolizes function in the code blocks)
+   4. If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, ~this~ is the global object. In a browser, it’s ~window~.
+   5. If multiple of the above rules apply, the rule that is higher wins and will set the ~this~ value.
+   6. If the function is an ES2015 arrow function (~=>~), it ignores all the rules above and receives the ~this~ value of its surrounding scope at the time it’s created. To determine ~this~, go one line above the arrow function’s creation and see what the value of ~this~ is there. It will be the same in the arrow function.
 
-    #+RESULTS:
-    : false
+   [[https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3][Medium article about this]]
     
-    TLDR; with JavaScript, *ALWAYS* use the strict equality operator (~===~) for
-    comparison unless you really know what you're doing with ~==~.
-
-*** Examples
-    Therefore, avoid writing things like
-    #+BEGIN_SRC js
-
-      try {
-          var supposedToBeInt = someApiYouCantGuaranteeDatatypeOf(); // supposedToBeInt was actually '420'
-          if (supposedToBeInt == 420) { // Please use strict equality here !!
-              // Do the right stuff
-          } else {
-              throw new Error(`Hey, it wasn't 420 !!`);
-          }
-      } catch (e) {
-          console.error(e);
-      }
-    #+END_SRC
+   Basically, ~this~ is something that gets pretty confusing. Depending on the
+   context, it may refer to very different things.
     
-** Arrow Functions
-   Consider the following function:
-   #+NAME: normal-js-function-example
+   For arrow functions though, things are a little more predictable. Notice
+   point 6 from above. Arrow functions /lexically/ bind their context, meaning
+   ~this~ in an arrow function will simply be the same ~this~ as the one
+   surrounding the function.
+** Example
+   The following is an example of a component in React.
    #+BEGIN_SRC js
-     function multiply (x, y) {
-         return x * y;
+     import React, { Component } from 'react'
+
+     export default class MyButton extends Component {
+         constructor (props) {
+             super(props)
+             this.state = { isEnabled: false }
+         }
+
+         render () {
+             return (
+                 <button onClick={this.handleClick}>
+                     {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                 </button>
+             )
+         }
+
+         handleClick () {
+             this.setState(state => ({
+                 isEnabled: !this.state.isEnabled
+             }))
+         }
      }
    #+END_SRC
-   
-   Arrow functions were influenced by some other programming languages where
-   they'd been working well. All arrow functions are anonymous, which gives it
-   some rather interesting properties but unfortunately will not be covered in
-   this talk (ask me more if interested!).
-   
-   They make simple functions a lot more concise.
-   
-   #+NAME: arrow-function-example
+   It's supposed to display a button that shows "Enabled" or "Disabled".
+   depending on whether how many times it's been clicked. Notice that
+   ~onClick~ is set to ~handleClick~. Let's see what this does.
+    
+   ~handleClick~ calls ~this.setState~, which is a method in React that updates
+   the current state. Judging from the code, you'd expect this to toggle the
+   value of ~isEnabled~. If you actually click the button, however, you'd
+   get an error message saying ~this~ is undefined (running in development
+   mode).
+    
+   The reason for that is: ~this~ is bound to handleClick in this context. To
+   get around that, we have to /bind/ ~handleClick~ in the constructor of
+   ~MyButton~.
    #+BEGIN_SRC js
-     const multiply = (x, y) => x * y;
+     import React, { Component } from 'react'
+
+     export default class MyButton extends Component {
+         constructor (props) {
+             super(props)
+             this.state = { isEnabled: false }
+             this.handleClick = this.handleClick.bind(this)
+         }
+
+         render () {
+             return (
+                 <button onClick={this.handleClick}>
+                     {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                 </button>
+             )
+         }
+
+         handleClick () {
+             this.setState(state => ({
+                 isEnabled: !this.state.isEnabled
+             }))
+         }
+     }
+   #+END_SRC
+    
+   Another way you can get around this is by using arrow functions:
+   #+BEGIN_SRC js
+     import React, { Component } from 'react'
+
+     export default class MyButton extends Component {
+         constructor (props) {
+             super(props)
+             this.state = { isEnabled: false }
+         }
+
+         render () {
+             return (
+                 <button onClick={() => this.handleClick}>
+                     {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                 </button>
+             )
+         }
+
+         handleClick () {
+             this.setState(state => ({
+                 isEnabled: !this.state.isEnabled
+             }))
+         }
+     }
+   #+END_SRC
+   However, the above code actually creates a new ~handleClick~ *every single
+   time* ~MyButton~ renders. The impact of this is obviously performance.
+    
+   Alternatively, you can use this /experimental/ syntax with arrow functions.
+   #+BEGIN_SRC js
+     import React, { Component } from 'react'
+
+     export default class MyButton extends Component {
+         constructor (props) {
+             super(props)
+             this.state = { isEnabled: false }
+         }
+
+         render () {
+             return (
+                 <button onClick={this.handleClick}>
+                     {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                 </button>
+             )
+         }
+
+         handleClick = () => {
+             this.setState(state => ({
+                 isEnabled: !this.state.isEnabled
+             }))
+         }
+     }
+   #+END_SRC
+** Conclusion
+   The main point I'd like to get across in this section is that
+   *arrow functions do not replace normal functions*. They are simply tools
+   that work alongside the traditional ~function~s, and they're useful in
+   certain cases e.g. where you'd previously have to use ~.bind~. Also, they're
+   great for when you need simple, consise callbacks. However, they *do not*
+   substitute the traditional ~function~ keyword.
+* "Classes"
+  Classes in Javascript was first introduced in ECMAScript® 2015. They are
+  essentially *syntactical sugar* over Javascript's inheritance with
+  prototype chaining. A reason why you would consider using ES6 Classes is
+  almostly due to cleaner and simpler syntax. Will there be performance
+  differences (In a positive note)? Probably the ECMAScript engine
+  rendering the Javascript codes will be able to optimize a little better
+  but there will probably be little to no significant difference in the
+  way the script performs. Another reason why you should Classes is due to
+  the fact that it is much easier to set up inheritance using the new ES6
+  syntax. The "methods" provided by Classes look like those familiar to
+  developers of class-based languages such as C#, Java, C++ etc. However,
+  they are not the same. JavaScript remains prototype-based.
+
+** Prototype
+   :PROPERTIES:
+   :CUSTOM_ID: prototype
+   :END:
+
+   As mentioned in the general description of this section, ES6 Classes are
+   syntactic sugar for the prototype chain system. To give an example:
+
+   #+BEGIN_SRC js
+     var Person = function(name, age)  {
+         if(!(this instanceof Person)) {
+             throw new Error("Use the 'new' keyword when constructing a Person object.");  
+         }
+         this.name = name;
+         this.age = age;  
+     };
+
+     // Add properties in Person function's prototype
+     Person.prototype.details = function() {
+         alert(`Name: ${this.name}\nAge: ${this.age}`);
+     };
+
+     var user = new  Person('Joshua', 21)
+     user.details()  
    #+END_SRC
 
-   The difference is particularly apparent when they're passed as arguments e.g.
-   in Promise chains.
-   #+NAME: promise-chain-comparison
+   As you can see, the 'Person' variable is an instance of an object. It
+   currently has a function property called 'details'. When accessing a
+   property of an object,the property will not only pursue on the object
+   but on the prototype of the object, the prototype of the prototype, and
+   so on until the end of the prototype chain is reached or there is
+   another matching property name in the prototypical chain. To elaborate
+   more about concept, go through the following code snippet:
+
    #+BEGIN_SRC js
-     fetch('www.example.com/api/v3')
-         .then(function (response) {
-             return response.json();
-         })
-         .then(function (json) {
-             console.log(json);
-         })
+     let Character = function () {
+         this.name = '_blank_';
+         this.age = 0;
+     }
 
-     /* Versus */
-     fetch('www.example.com/api/v3')
-         .then(response => response.json())
-         .then(json => console.log(json))
+     let newPlayer = new Character(); // {name: '_blank_', age: 0}
+     //add properties in Character function's prototype
+
+     Character.prototype.age = 20;
+     Character.prototype.gender = 'Unknown';
+
+     console.log(newPlayer.name) // _blank_
+
+     console.log(newPlayer.age) // 0
+     // The prototype also has a 'age' property of value 20 but it's not visited. 
+     // This is called "property shadowing.
+
+     console.log(newPlayer.gender); // Unknown
+     // newPlayer object does not own the property 'gender'. Hence, check
+     // the prototype chain newPlayer.[[Prototype]] and the value is 'Unknown'.
+
+     console.log(newPlayer.class) // undefined
+     // newPlayer object does not own the property 'class'.  Hence, check
+     // the prototype chain newPlayer.[[Prototype]].[[Prototype]] and the value is 'null'
+     // no property found, return undefined.
    #+END_SRC
-   
-   But surely they weren't added just for syntactic sugar? We already have
-   anonymous functions, so what's the purpose of this funny looking arrow thing
-   besides saving some lines?
-   
-*** ~this~
-    +Remember-when-we-talked-about-how-functions-formed-a-/scope/-earlier?-It+
-    +turns-out-that-variables-aren't-the-only-thing-that-a-function-scope+
-    +encloses.-The-~this~-keyword-refers-to-the-/execution-context/-of-the+
-    +function,-and-is-one-of-the-things-that-are-bound+
-    
-    After very careful consideration, I've decided not to dive into the details
-    of how ~this~ works. It's one of the most confusing parts of JavaScript, and
-    I don't feel confident I can convey all the rules within this time frame.
-    
-    I'd like to sum it up as "it's complicated":
-    1. If the ~new~ keyword is used when calling the function, ~this~ inside the function is a brand new object.
-    2. If ~apply~, ~call,~ or ~bind~ are used to call a function, ~this~ inside the function is the object that is passed in as the argument.
-    3. If a function is called as a method — that is, if dot notation is used to invoke the function, ~this~ is the object that the function is a property of. In other words, when a dot is to the left of a function invocation, ~this~ is the object to the left of the dot. (ƒ symbolizes function in the code blocks)
-    4. If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, ~this~ is the global object. In a browser, it’s ~window~.
-    5. If multiple of the above rules apply, the rule that is higher wins and will set the ~this~ value.
-    6. If the function is an ES2015 arrow function (~=>~), it ignores all the rules above and receives the ~this~ value of its surrounding scope at the time it’s created. To determine ~this~, go one line above the arrow function’s creation and see what the value of ~this~ is there. It will be the same in the arrow function.
 
-    [[https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3][Medium article about this]]
-    
-    Basically, ~this~ is something that gets pretty confusing. Depending on the
-    context, it may refer to very different things.
-    
-    For arrow functions though, things are a little more predictable. Notice
-    point 6 from above. Arrow functions /lexically/ bind their context, meaning
-    ~this~ in an arrow function will simply be the same ~this~ as the one
-    surrounding the function.
-*** Example
-    The following is an example of a component in React.
-    #+BEGIN_SRC js
-      import React, { Component } from 'react'
+   Each object in Javascript has a private property which stores an
+   association link to another object called its prototype. That prototype
+   object has a prototype of its own, and so on until an object is reached
+   with null as its prototype. Because null has no prototype, it serves as
+   the final link in this prototype chain.
+** Implementation of Classes
+   :PROPERTIES:
+   :CUSTOM_ID: implementation-of-classes
+    :END:
 
-      export default class MyButton extends Component {
-          constructor (props) {
-              super(props)
-              this.state = { isEnabled: false }
-          }
+   There are two ways to define a Class. Similar to function declarations
+   and function expressions, the class syntax has two components: class
+   declarations and class expressions. In this workshop, we will be
+   covering *class declarations*. However, you can refer to online
+   resources to find out more about
+   [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes][class expressions]].
 
-          render () {
-              return (
-                  <button onClick={this.handleClick}>
-                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
-                  </button>
-              )
-          }
+   It is easy to set up a class instance and establish inheritance
+   hierarchies using the new ES6 syntax.The code snippet below creates a
+   class called 'Person' and defining the associating the respective
+   function properties to the object:
 
-          handleClick () {
-              this.setState(state => ({
-                  isEnabled: !this.state.isEnabled
-              }))
-          }
-      }
-    #+END_SRC
-    It's supposed to display a button that shows "Enabled" or "Disabled".
-    depending on whether how many times it's been clicked. Notice that
-    ~onClick~ is set to ~handleClick~. Let's see what this does.
-    
-    ~handleClick~ calls ~this.setState~, which is a method in React that updates
-    the current state. Judging from the code, you'd expect this to toggle the
-    value of ~isEnabled~. If you actually click the button, however, you'd
-    get an error message saying ~this~ is undefined (running in development
-    mode).
-    
-    The reason for that is: ~this~ is bound to handleClick in this context. To
-    get around that, we have to /bind/ ~handleClick~ in the constructor of
-    ~MyButton~.
-    #+BEGIN_SRC js
-      import React, { Component } from 'react'
+   #+BEGIN_SRC js
+     // ES6
+     class Person {
+         constructor(name, age) {
+             this.name = name;
+             this.age = age;
+         }
 
-      export default class MyButton extends Component {
-          constructor (props) {
-              super(props)
-              this.state = { isEnabled: false }
-              this.handleClick = this.handleClick.bind(this)
-          }
+         get details() {
+             return this.greet();
+         }
 
-          render () {
-              return (
-                  <button onClick={this.handleClick}>
-                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
-                  </button>
-              )
-          }
+         greet() {
+             return `Hello. My name is ${this.name} and I am ${this.age} years old.`;
+         }
 
-          handleClick () {
-              this.setState(state => ({
-                  isEnabled: !this.state.isEnabled
-              }))
-          }
-      }
-    #+END_SRC
-    
-    Another way you can get around this is by using arrow functions:
-    #+BEGIN_SRC js
-      import React, { Component } from 'react'
+         static predict(person) {
+             if(!this instanceof(Person)) {
+                 throw new Error("Use the 'new' keyword when constructing a Person object.");  
+             } else if(person.age > 65) {
+                 console.log("You are a senior citizen.");
+             } else {
+                 console.log("You are NOT a senior citizen.");
+             }
+         }
+     }
 
-      export default class MyButton extends Component {
-          constructor (props) {
-              super(props)
-              this.state = { isEnabled: false }
-          }
+     const p1 = new Person('Joshua', 20);
 
-          render () {
-              return (
-                  <button onClick={() => this.handleClick}>
-                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
-                  </button>
-              )
-          }
+     console.log(p1.details); // "Hello. My name is Joshua and I am 20 years old."
+     Person.predict(p1); // "You are NOT a senior citizen."
+   #+END_SRC
 
-          handleClick () {
-              this.setState(state => ({
-                  isEnabled: !this.state.isEnabled
-              }))
-          }
-      }
-    #+END_SRC
-    However, the above code actually creates a new ~handleClick~ *every single
-    time* ~MyButton~ renders. The impact of this is obviously performance.
-    
-    Alternatively, you can use this /experimental/ syntax with arrow functions.
-    #+BEGIN_SRC js
-      import React, { Component } from 'react'
+   /The bodies of class declarations and class expressions are executed in
+   strict mode i.e. constructor, static and prototype methods, getter and
+   setter functions are executed in strict mode./
 
-      export default class MyButton extends Component {
-          constructor (props) {
-              super(props)
-              this.state = { isEnabled: false }
-          }
+   #+BEGIN_SRC js
+     // class Person() {
+     //  ...
+     // }
+     class Employee extends Person {
+         constructor(name, age, position, salary) {
+             super(name, age);
+             this.position = position;
+             this.salary = salary;
+         }
 
-          render () {
-              return (
-                  <button onClick={this.handleClick}>
-                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
-                  </button>
-              )
-          }
+         print() {
+             console.log(`You are a ${this.position} and your income is $${this.salary}`)
+         }
 
-          handleClick = () => {
-              this.setState(state => ({
-                  isEnabled: !this.state.isEnabled
-              }))
-          }
-      }
-    #+END_SRC
-*** Conclusion
-    The main point I'd like to get across in this section is that
-    *arrow functions do not replace normal functions*. They are simply tools
-    that work alongside the traditional ~function~s, and they're useful in
-    certain cases e.g. where you'd previously have to use ~.bind~. Also, they're
-    great for when you need simple, consise callbacks. However, they *do not*
-    substitute the traditional ~function~ keyword.
-** "Classes"
-** Promises
-** Generic tooling
-*** ESLint
-    Fundamentally, ESLint is a utility that enforces a collection of rules (a
-    style guide) that your JS code needs to adhere to. By enforcing these set of
-    rules, ESLint is able to catch errors that you might have failed to notice
-    when writing JS (e.g. a dangling comma, syntax errors, accidental globals).
-    
-    ESLint further enforces code formatting conventions, prompting you to write
-    code in a uniform fashion that can be easily understood and maintained by
-    your team.
-    
-    Moreover, ESLint is plugin based, and hence, different kinds of style guides
-    can be configured for your project to catch JS errors and enforce formatting
-    conventions.
-    
-    Here's a quick look of ESLint in action in Visual Studio Code:
-    
-    [[file:images/eslint-in-action.png]]
-    
-    To sum up, ESLint is a utility implemeted in JS projects to ensure that the
-    code you write meets the rules it enforces, so as to keep your code base
-    consistent and as error free as possbile.
-    
-*** Webpack
-    In the context of JS projects, Webpack is a module bundler that travels a
-    project, forming a graph of its dependencies, then bundling all these
-    dependencies into a bundle to be served to users.
-    
-    Back in the olden days, we used to include javascript files using the
-    ~<script>~ tag.
-    #+BEGIN_SRC html
-      <script src="some-file-somewhere.js"></script>
-    #+END_SRC
-    
-    If we have a bunch of scripts, they'd end up something like this. The below
-    example is stolen from our beloved WebA project, including the ~link~ tags
-    as well.
-    #+BEGIN_SRC html
-      <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-      <link href="~/lib/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet" /> 
-      <link href="~/css/site.css" rel="stylesheet" />
-      <link rel="stylesheet" href="~/css/sticky_footer.css" />
-      <link href="~/lib/noty/lib/noty.css" rel="stylesheet" />
-      <link href="~/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet"/>
-      <link href="~/lib/DataTables-1.10.16/css/jquery.dataTables.css" rel="stylesheet"/>
-      <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
-      <link href="~/lib/bootstrap-timepicker/css/timepicker.css" rel="stylesheet"/>
+         greet() {
+             const greetings = super.greet();
+             console.log(`${greetings} I am a successful person!`);
+         }
+     }
 
-
-      <script src="~/lib/jquery/dist/jquery.js"></script>
-      <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-      <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
-      <script src="~/lib/js-cookie/src/js.cookie.js"></script>
-      <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-      <script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
-      <script src="~/lib/noty/lib/noty.js"></script>
-      <script src="~/lib/moment/min/moment.min.js"></script>
-      <script src="~/lib/he/he.js"></script>
-      <script src="~/lib/bootstrap-table-contextmenu/dist/bootstrap-table-contextmenu.min.js"></script>
-      <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
-      <script src="~/lib/DataTables-1.10.16/js/jquery.dataTables.js"></script>
-      <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-      <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-    #+END_SRC
-    
-    WebA was a simple project if you compare it to the scale of web applications
-    that are around. Have you ever inspected the source of some older ecommerce
-    site and seen 30 script tags alone?
-    
-    Each script ends up adding something else to the global scope. I'm not going
-    in depth into why this is bad, but just know that this potentially causes
-    some problems and conflicts.
-    
-    This is one of the problem that webpack solves. Now, instead of including
-    script files one by one, webpack builds a /dependency graph/ from all the
-    modules you /require/, starting from an entry point.
-    #+BEGIN_SRC js
-      // app.js
-      const express = require('express');
-
-      const app = express();
-    #+END_SRC
-    In the above example, let's assume app.js was the entry point for Webpack.
-    With the ~require~, Webpack now knows this app /requires/ express. It'll go
-    into express and look into the library.
-    
-    Here's the source for ~index.js~ for Express.
-    #+BEGIN_SRC js
-      /*
-       * express
-       * Copyright(c) 2009-2013 TJ Holowaychuk
-       * Copyright(c) 2013 Roman Shtylman
-       * Copyright(c) 2014-2015 Douglas Christopher Wilson
-       * MIT Licensed
-       */
-
-      'use strict';
-
-      module.exports = require('./lib/express');
-    #+END_SRC
-
-    From here, it'll continue on into ~./lib/express~ and on and on, until it
-    finally has everything it needs. It'll then bundle all this stuff up.
-    
-    Webpack's capabilities aren't simply limited to bundling. Another very
-    popular feature is Hot Module Replacement, where it can "hotswap" modules
-    while the application is still running, without needing a full reload. This
-    speeds up development *tremendously*. Remember when you were doing ASP .NET
-    Core, and you had to restart every time you made a change to the server
-    code? Webpack is able to swap those out without restarting. In fact, you can
-    configure Webpack to reload your application as soon as you save your
-    changes.
-    
-    In Node.js projects nowadays, Webpack is often pre-configured in many
-    templates. For example, the cli tool ~create-react-app~ allows you to
-    generate a React project with a all the webpack configuration done.
-    Generally, it's unlikely you'll need to configure Webpack manually (thank
-    god) but it's always helpful to know how things are bundled together.
-* Web
-
-* Git
+     p2.print() // You are a Director and your income is 15000
+     Person.predict(p2); // "You are a senior citizen."
+     p2.greet() // Hello. My name is John and I am 70 years old. I am a successful person!
+   #+END_SRC
   
+* Promises
+   :PROPERTIES:
+   :CUSTOM_ID: promises
+   :END:
+   
+   Before talking about promises, let's look at the following pseudocode of
+   a web client making 2 AJAX requests:
+
+   #+BEGIN_EXAMPLE
+       1. Request data from server
+       2. Process the data returned from the server
+       3. Render the processed data in a dropdown list
+       4. Request another data from server
+       5. Process the data returned from the server
+       6. Render the processed data in a table
+   #+END_EXAMPLE
+
+   As you can see from the pseudocode above, the instructions given is
+   executed in a sequential order (a synchronous operation). But what might
+   not be obvious here is that when an AJAX request is made, it might take
+   the server awhile to return a response(or none could be returned
+   either). That would mean that your code will be stuck waiting for the
+   server's response and none of the code below it will execute unless the
+   server's response is returned. In the context of client side web
+   development with JS, that would mean that your site might take a longer
+   time to be ready before your users can start interacting with it.
+
+   Now let's look at another set of pseudocode doing the same thing (albeit
+   differently):
+
+   #+BEGIN_EXAMPLE
+       1. Request data from server and proceed to execute step 4. Only execute steps 2 and 3 when server returns a response.
+       2. Process the data returned from the server
+       3. Render the processed data in a dropdown list
+
+       4. Request another data from server, only execute steps 5 and 6 when server returns a response.
+       5. Process the data returned from the server
+       6. Render the processed data in a table
+   #+END_EXAMPLE
+
+   As you can see from the second pseudocode above, once the first AJAX
+   request is made to the server, we proceed to execute the second AJAX
+   request. Steps (2, 3) and (5, 6) will only execute when steps 1 and 6
+   recieves a response from the server respectively. This is an example of
+   an asynchronous operation whereby code does not execute in a sequential
+   order. In the context of client side web development with JS, that would
+   mean that the pseudocode above appears to be executing the two AJAX
+   request concurrently, allowing your web page to be ready for users to
+   interact with much quickly compared to the first pseudocode example.
+
+   While the above examples do mention about how fast it takes for the
+   website to get ready before users can start interacting with it, the
+   point to draw here is the fashion in which code is executed. JS is
+   single threaded, hence, a sequential operation involving a task that
+   might not immediately return a result (e.g. I/O, networking operations,
+   etc) will block the execution of the remaining code while waiting for
+   some response like in pseudocode example 1. Pseudocode example 2
+   however, illustrates how JS effectively deals with tasks that takes
+   awhile to return a result without blocking the execution of the other
+   codes below by executing code in an asynchronous manner. In code speak,
+   a way to model how JS deals with such asynchronous operations is through
+   the use of promises.
+
+   Now let's enter the promise. A promise is simply a JS object that may
+   return a single value in the future such as a resolved value or a reason
+   why it fails to return a resolved value. As such, a promise has 3
+   possible states, fufilled, rejected, or pending.
+
+   To illustrate the states of a promise (and how to use them), let's look
+   at the following example:
+
+   #+BEGIN_SRC js
+     // When we invoke the fetch API (a promise) to request data from a server endpoint,
+     // We can say that the current state of this promise is pending.
+     // At this state, #2 will execute first.
+
+     // #1
+     fetch('www.example.com/api/v3');    
+         .then(function (response) {
+             // When the request is complete, the promise is fufilled
+             // And this callback function will be invoked with a single
+             // argument representing the resolved value from the successful request
+             console.log(response);
+         })
+         .catch(function (err) {
+             // However if the request would to fail, the promise will be rejected
+             // And this callback function will be invoked with a single
+             // argument representing the reason why the Fetch API fails to complete your request successfully
+             console.log(err);
+         })
+
+     // #2
+     console.log('I will likely show first before the operation above completes');
+   #+END_SRC
+
+   Now that you know what a promise is and how to use them, let's look at
+   how to write a promise
+
+   #+BEGIN_SRC js
+     // Import file system module from nodejs
+     const fs = require('fs');
+
+     // This function takes a filename as an argument and returns the file content
+     function readFile(filename) {
+         // This promise wraps over the readFile function of the fs module
+         return new Promise((resolve, reject) => {
+             fs.readFile(filename, (err, file) => {
+                 if (err) {
+                     // Reject promise with error
+                     return reject(err);
+                 }
+                 // Resolve promise with file
+                 resolve(file);
+             });
+         });
+     }
+
+     // Invoke readFile function
+     readFile('file.txt')
+         .then(function (result) {
+             console.log(result); // file.text's content
+         })
+         .catch(function (err) {
+             console.log(err); // log error
+         })
+   #+END_SRC
+
+   This concludes the section on promises.
+* Generic tooling
+** ESLint
+   Fundamentally, ESLint is a utility that enforces a collection of rules (a
+   style guide) that your JS code needs to adhere to. By enforcing these set of
+   rules, ESLint is able to catch errors that you might have failed to notice
+   when writing JS (e.g. a dangling comma, syntax errors, accidental globals).
+    
+   ESLint further enforces code formatting conventions, prompting you to write
+   code in a uniform fashion that can be easily understood and maintained by
+   your team.
+    
+   Moreover, ESLint is plugin based, and hence, different kinds of style guides
+   can be configured for your project to catch JS errors and enforce formatting
+   conventions.
+    
+   Here's a quick look of ESLint in action in Visual Studio Code:
+    
+   [[file:images/eslint-in-action.png]]
+    
+   To sum up, ESLint is a utility implemeted in JS projects to ensure that the
+   code you write meets the rules it enforces, so as to keep your code base
+   consistent and as error free as possbile.
+    
+** Webpack
+   In the context of JS projects, Webpack is a module bundler that travels a
+   project, forming a graph of its dependencies, then bundling all these
+   dependencies into a bundle to be served to users.
+    
+   Back in the olden days, we used to include javascript files using the
+   ~<script>~ tag.
+   #+BEGIN_SRC html
+     <script src="some-file-somewhere.js"></script>
+   #+END_SRC
+    
+   If we have a bunch of scripts, they'd end up something like this. The below
+   example is stolen from our beloved WebA project, including the ~link~ tags
+   as well.
+   #+BEGIN_SRC html
+     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+     <link href="~/lib/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet" /> 
+     <link href="~/css/site.css" rel="stylesheet" />
+     <link rel="stylesheet" href="~/css/sticky_footer.css" />
+     <link href="~/lib/noty/lib/noty.css" rel="stylesheet" />
+     <link href="~/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet"/>
+     <link href="~/lib/DataTables-1.10.16/css/jquery.dataTables.css" rel="stylesheet"/>
+     <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+     <link href="~/lib/bootstrap-timepicker/css/timepicker.css" rel="stylesheet"/>
+
+
+     <script src="~/lib/jquery/dist/jquery.js"></script>
+     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+     <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+     <script src="~/lib/js-cookie/src/js.cookie.js"></script>
+     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+     <script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+     <script src="~/lib/noty/lib/noty.js"></script>
+     <script src="~/lib/moment/min/moment.min.js"></script>
+     <script src="~/lib/he/he.js"></script>
+     <script src="~/lib/bootstrap-table-contextmenu/dist/bootstrap-table-contextmenu.min.js"></script>
+     <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+     <script src="~/lib/DataTables-1.10.16/js/jquery.dataTables.js"></script>
+     <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+     <script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+   #+END_SRC
+    
+   WebA was a simple project if you compare it to the scale of web applications
+   that are around. Have you ever inspected the source of some older ecommerce
+   site and seen 30 script tags alone?
+    
+   Each script ends up adding something else to the global scope. I'm not going
+   in depth into why this is bad, but just know that this potentially causes
+   some problems and conflicts.
+    
+   This is one of the problem that webpack solves. Now, instead of including
+   script files one by one, webpack builds a /dependency graph/ from all the
+   modules you /require/, starting from an entry point.
+   #+BEGIN_SRC js
+     // app.js
+     const express = require('express');
+
+     const app = express();
+   #+END_SRC
+   In the above example, let's assume app.js was the entry point for Webpack.
+   With the ~require~, Webpack now knows this app /requires/ express. It'll go
+   into express and look into the library.
+    
+   Here's the source for ~index.js~ for Express.
+   #+BEGIN_SRC js
+     /*
+      * express
+      * Copyright(c) 2009-2013 TJ Holowaychuk
+      * Copyright(c) 2013 Roman Shtylman
+      * Copyright(c) 2014-2015 Douglas Christopher Wilson
+      * MIT Licensed
+      */
+
+     'use strict';
+
+     module.exports = require('./lib/express');
+   #+END_SRC
+
+   From here, it'll continue on into ~./lib/express~ and on and on, until it
+   finally has everything it needs. It'll then bundle all this stuff up.
+    
+   Webpack's capabilities aren't simply limited to bundling. Another very
+   popular feature is Hot Module Replacement, where it can "hotswap" modules
+   while the application is still running, without needing a full reload. This
+   speeds up development *tremendously*. Remember when you were doing ASP .NET
+   Core, and you had to restart every time you made a change to the server
+   code? Webpack is able to swap those out without restarting. In fact, you can
+   configure Webpack to reload your application as soon as you save your
+   changes.
+    
+   In Node.js projects nowadays, Webpack is often pre-configured in many
+   templates. For example, the cli tool ~create-react-app~ allows you to
+   generate a React project with a all the webpack configuration done.
+   Generally, it's unlikely you'll need to configure Webpack manually (thank
+   god) but it's always helpful to know how things are bundled together.
