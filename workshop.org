@@ -234,6 +234,7 @@
     
 ** Arrow Functions
    Consider the following function:
+   #+NAME: normal-js-function-example
    #+BEGIN_SRC js
      function multiply (x, y) {
          return x * y;
@@ -247,12 +248,14 @@
    
    They make simple functions a lot more concise.
    
+   #+NAME: arrow-function-example
    #+BEGIN_SRC js
      const multiply = (x, y) => x * y;
    #+END_SRC
 
    The difference is particularly apparent when they're passed as arguments e.g.
    in Promise chains.
+   #+NAME: promise-chain-comparison
    #+BEGIN_SRC js
      fetch('www.example.com/api/v3')
          .then(function (response) {
