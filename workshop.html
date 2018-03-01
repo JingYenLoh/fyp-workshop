@@ -151,13 +151,17 @@ In computer science, a closure is a&#x2026;
 technique for implementing lexically scoped name binding<br />
 in a language with first-class functions &#x2013; Wikipedia<br />
 </p>
+</section>
 
+<section>
 <p>
 <b>What</b> is that nonsense?!?!?! Ok, ok, let's ignore the wikipedia definitions
 today. Here's something that's a little different from C# or Java:
 <i>variables in JavaScript are actually "function scoped".</i>
 </p>
+</section>
 
+<section>
 <div class="org-src-container">
 
 <pre  class="src src-js"><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">aThousand</span> <span style="color: #2aa198;">()</span> <span style="color: #2aa198;">{</span>
@@ -178,6 +182,9 @@ limited to the for loop, it's actually a declaration that can be accessed
 within the function itself.
 </p>
 
+</section>
+
+<section>
 <p>
 It turns out that a fuction is a <b>closure</b> in JS. Think of it as the
 function being the thing that creates a <i>scope</i>.
@@ -199,12 +206,18 @@ This is a little different from languages you're probably used to, like C#.
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 I'm waving my hand with a lot of magic here, but essentially think of
 variables in these language as <code>{}</code> scoped, that is to say, a pair of curly
 braces forms a scope.
 </p>
 
+</section>
+
+<section>
 <p>
 Thus, one reason <code>let</code> and <code>const</code> were introduced was to make things more
 predictable to people who are already accustomed to such languages.
@@ -237,6 +250,9 @@ What do you think is gonna happen below?
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 What about this?
 </p>
@@ -246,6 +262,9 @@ What about this?
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 😲 So what's the difference ??!?!?
 </p>
@@ -259,6 +278,9 @@ Well, let's try this&#x2026;
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 <b>Huh?</b>
 </p>
@@ -269,6 +291,9 @@ Well, let's try this&#x2026;
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 <b>!!!</b>
 </p>
@@ -283,13 +308,25 @@ true
 
 </pre>
 
+</section>
+
+<!-- <section>
 <p>
 Ok, ok, we get the point. Why does this happen?
 </p>
 
+</section> -->
+
+<section>
 <p>
 In JavaScript, <code>==</code> is the <i>abstract equality operator</i>. When comparing
-values with <code>==</code>, it converts both values to a common type. As an example,
+values with <code>==</code>, it converts both values to a common type.
+</p>
+</section>
+
+<section>
+<p>
+As an example,
 with <a href="#/slide-org1cd5364">1</a>, it converts the <code>true</code> to a number before
 comparing.
 </p>
@@ -321,6 +358,9 @@ console.log<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 Well, most of the time anyway. You still get magical edge
 cases like this.
@@ -332,6 +372,9 @@ cases like this.
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 TLDR; with JavaScript, <b>ALWAYS</b> use the strict equality operator (<code>===</code>) for
 comparison unless you really know what you're doing with <code>==</code>.
@@ -364,6 +407,8 @@ Therefore, avoid writing things like
 <section>
 <section id="slide-org80d36b9">
 <h2 id="org80d36b9"><span class="section-number-2">3</span> Arrow Functions</h2>
+</section>
+<section>
 <p>
 Consider the following function:
 </p>
@@ -375,13 +420,15 @@ Consider the following function:
 </pre>
 </div>
 
+</section>
+<section>
 <p>
-Arrow functions were influenced by some other programming languages where
-they'd been working well. All arrow functions are anonymous, which gives it
-some rather interesting properties but unfortunately will not be covered in
-this talk (ask me more if interested!).
+Arrow functions were influenced by some other programming languages
+All arrow functions are anonymous.
 </p>
 
+</section>
+<section>
 <p>
 They make simple functions a lot more concise.
 </p>
@@ -392,6 +439,8 @@ They make simple functions a lot more concise.
 </pre>
 </div>
 
+</section>
+<section>
 <p>
 The difference is particularly apparent when they're passed as arguments e.g.
 in Promise chains.
@@ -413,15 +462,20 @@ fetch<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'www.ex
 </pre>
 </div>
 
+</section>
+<section>
 <p>
-But surely they weren't added just for syntactic sugar? We already have
+<!-- But surely they weren't added just for syntactic sugar? We already have
 anonymous functions, so what's the purpose of this funny looking arrow thing
-besides saving some lines?
+besides saving some lines? -->
+So what's the purpose of arrow functions besides saving a few characters?
 </p>
 
 </section>
 <section id="slide-orgc949840">
 <h3 id="orgc949840"><span class="section-number-3">3.1</span> <code>this</code></h3>
+</section>
+<section>
 <p>
 <del>Remember-when-we-talked-about-how-functions-formed-a-<i>scope</i>-earlier?-It</del>
 <del>turns-out-that-variables-aren't-the-only-thing-that-a-function-scope</del>
@@ -429,46 +483,61 @@ besides saving some lines?
 <del>function,-and-is-one-of-the-things-that-are-bound</del>
 </p>
 
-<p>
+</section>
+<section>
+<!-- <p>
 After very careful consideration, I've decided not to dive into the details
 of how <code>this</code> works. It's one of the most confusing parts of JavaScript, and
 I don't feel confident I can convey all the rules within this time frame.
-</p>
+</p> -->
 
 <p>
-I'd like to sum it up as "it's complicated":
+<code>this</code> is complicated.
 </p>
+</section>
+<section>
 <ol>
 <li>If the <code>new</code> keyword is used when calling the function, <code>this</code> inside the function is a brand new object.</li>
 <li>If <code>apply</code>, <code>call,</code> or <code>bind</code> are used to call a function, <code>this</code> inside the function is the object that is passed in as the argument.</li>
 <li>If a function is called as a method — that is, if dot notation is used to invoke the function, <code>this</code> is the object that the function is a property of. In other words, when a dot is to the left of a function invocation, <code>this</code> is the object to the left of the dot. (ƒ symbolizes function in the code blocks)</li>
+</ol>
+</section>
+<section>
+<ol start="4">
 <li>If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, <code>this</code> is the global object. In a browser, it’s <code>window</code>.</li>
 <li>If multiple of the above rules apply, the rule that is higher wins and will set the <code>this</code> value.</li>
 <li>If the function is an ES2015 arrow function (<code>=&gt;</code>), it ignores all the rules above and receives the <code>this</code> value of its surrounding scope at the time it’s created. To determine <code>this</code>, go one line above the arrow function’s creation and see what the value of <code>this</code> is there. It will be the same in the arrow function.</li>
 
 </ol>
 
-<p>
+</section>
+<section>
+<!-- <p>
 <a href="https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3">Medium article about this</a>
+</p> -->
+
+<p>
+Basically, <code>this</code> is something that gets pretty confusing.
+<!-- Depending on the context, it may refer to very different things. -->
 </p>
 
 <p>
-Basically, <code>this</code> is something that gets pretty confusing. Depending on the
-context, it may refer to very different things.
-</p>
-
-<p>
-For arrow functions though, things are a little more predictable. Notice
+<!-- For arrow functions though, things are a little more predictable. Notice
 point 6 from above. Arrow functions <i>lexically</i> bind their context, meaning
 <code>this</code> in an arrow function will simply be the same <code>this</code> as the one
-surrounding the function.
+surrounding the function. -->
+Arrow functions <i>lexically</i> bind their context, meaning
+<code>this</code> in an arrow function will simply be the same
+<code>this</code> as the one surrounding the function.
 </p>
 </section>
 <section id="slide-org27f2793">
 <h3 id="org27f2793"><span class="section-number-3">3.2</span> Example</h3>
-<p>
+</section>
+<section>
+<!-- <p>
 The following is an example of a component in React.
-</p>
+</p> -->
 <div class="org-src-container">
 
 <pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
@@ -495,25 +564,29 @@ The following is an example of a component in React.
 <span style="color: #2aa198;">}</span>
 </pre>
 </div>
-<p>
+</section>
+<section>
+<!-- <p>
 It's supposed to display a button that shows "Enabled" or "Disabled".
 depending on whether how many times it's been clicked. Notice that
 <code>onClick</code> is set to <code>handleClick</code>. Let's see what this does.
-</p>
+</p> -->
 
-<p>
+<!-- <p>
 <code>handleClick</code> calls <code>this.setState</code>, which is a method in React that updates
 the current state. Judging from the code, you'd expect this to toggle the
 value of <code>isEnabled</code>. If you actually click the button, however, you'd
 get an error message saying <code>this</code> is undefined (running in development
 mode).
-</p>
+</p> -->
 
 <p>
 The reason for that is: <code>this</code> is bound to handleClick in this context. To
 get around that, we have to <i>bind</i> <code>handleClick</code> in the constructor of
 <code>MyButton</code>.
 </p>
+</section>
+<section>
 <div class="org-src-container">
 
 <pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
@@ -542,6 +615,8 @@ get around that, we have to <i>bind</i> <code>handleClick</code> in the construc
 </pre>
 </div>
 
+</section>
+<section>
 <p>
 Another way you can get around this is by using arrow functions:
 </p>
@@ -571,11 +646,15 @@ Another way you can get around this is by using arrow functions:
 <span style="color: #2aa198;">}</span>
 </pre>
 </div>
+</section>
+<section>
 <p>
 However, the above code actually creates a new <code>handleClick</code> <b>every single
 time</b> <code>MyButton</code> renders. The impact of this is obviously performance.
 </p>
 
+</section>
+<section>
 <p>
 Alternatively, you can use this <i>experimental</i> syntax with arrow functions.
 </p>
@@ -609,13 +688,17 @@ Alternatively, you can use this <i>experimental</i> syntax with arrow functions.
 <section id="slide-org123d5ea">
 <h3 id="org123d5ea"><span class="section-number-3">3.3</span> Conclusion</h3>
 <p>
+<b>Arrow functions do not replace traditional functions.</b>
+They work alongside each other.
+</p>
+<!-- <p>
 The main point I'd like to get across in this section is that
 <b>arrow functions do not replace normal functions</b>. They are simply tools
 that work alongside the traditional <code>function~s, and they're useful in
    certain cases e.g. where you'd previously have to use ~.bind</code>. Also, they're
 great for when you need simple, consise callbacks. However, they <b>do not</b>
 substitute the traditional <code>function</code> keyword.
-</p>
+</p> -->
 </section>
 </section>
 <section>
@@ -997,12 +1080,18 @@ consistent and as error free as possbile.
 </section>
 <section id="slide-orgc43e878">
 <h3 id="orgc43e878"><span class="section-number-3">6.2</span> Webpack</h3>
+</section>
+
+<section>
 <p>
 In the context of JS projects, Webpack is a module bundler that travels a
 project, forming a graph of its dependencies, then bundling all these
 dependencies into a bundle to be served to users.
 </p>
 
+</section>
+
+<section>
 <p>
 Back in the olden days, we used to include javascript files using the
 <code>&lt;script&gt;</code> tag.
@@ -1013,11 +1102,17 @@ Back in the olden days, we used to include javascript files using the
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 If we have a bunch of scripts, they'd end up something like this. The below
 example is stolen from our beloved WebA project, including the <code>link</code> tags
 as well.
 </p>
+</section>
+
+<section>
 <div class="org-src-container">
 
 <pre  class="src src-html">&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap/dist/css/bootstrap.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt;
@@ -1048,23 +1143,35 @@ as well.
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 WebA was a simple project if you compare it to the scale of web applications
 that are around. Have you ever inspected the source of some older ecommerce
 site and seen 30 script tags alone?
 </p>
 
+</section>
+
+<section>
 <p>
 Each script ends up adding something else to the global scope. I'm not going
 in depth into why this is bad, but just know that this potentially causes
 some problems and conflicts.
 </p>
 
+</section>
+
+<section>
 <p>
 This is one of the problem that webpack solves. Now, instead of including
 script files one by one, webpack builds a <i>dependency graph</i> from all the
 modules you <i>require</i>, starting from an entry point.
 </p>
+</section>
+
+<section>
 <div class="org-src-container">
 
 <pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">app.js</span>
@@ -1079,6 +1186,9 @@ With the <code>require</code>, Webpack now knows this app <i>requires</i> expres
 into express and look into the library.
 </p>
 
+</section>
+
+<section>
 <p>
 Here's the source for <code>index.js</code> for Express.
 </p>
@@ -1098,26 +1208,42 @@ module.exports = require<span style="color: #2aa198;">(</span><span style="color
 </pre>
 </div>
 
+</section>
+
+<section>
 <p>
 From here, it'll continue on into <code>./lib/express</code> and on and on, until it
 finally has everything it needs. It'll then bundle all this stuff up.
 </p>
 
+</section>
+
+<section>
 <p>
-Webpack's capabilities aren't simply limited to bundling. Another very
+<!-- Webpack's capabilities aren't simply limited to bundling. Another very
 popular feature is Hot Module Replacement, where it can "hotswap" modules
 while the application is still running, without needing a full reload. This
 speeds up development <b>tremendously</b>. Remember when you were doing ASP .NET
 Core, and you had to restart every time you made a change to the server
 code? Webpack is able to swap those out without restarting. In fact, you can
 configure Webpack to reload your application as soon as you save your
-changes.
+changes. -->
+Webpack isn't just for bundling. It can:
+<ul>
+<li>Run dev server</li>
+<li>Enable hot reload</li>
+<li>Setup a build pipeline</li>
+<li>Much more</li>
+</ul>
 </p>
 
+</section>
+
+<section>
 <p>
-In Node.js projects nowadays, Webpack is often pre-configured in many
+<!-- In Node.js projects nowadays, Webpack is often pre-configured in many
 templates. For example, the cli tool <code>create-react-app</code> allows you to
-generate a React project with a all the webpack configuration done.
+generate a React project with a all the webpack configuration done. -->
 Generally, it's unlikely you'll need to configure Webpack manually (thank
 god) but it's always helpful to know how things are bundled together.
 </p>
