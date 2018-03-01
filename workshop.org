@@ -241,10 +241,10 @@
      }
    #+END_SRC
    
-   Arrow functions were influenced by CoffeeScript, a functional programming
-   language that transpiled into JavaScript. All arrow functions are
-   anonymous, which gives it some rather interesting properties but
-   unfortunately will not be covered in this talk (ask me more if interested!).
+   Arrow functions were influenced by some other programming langguages where
+   they'd been working well. All arrow functions are anonymous, which gives it
+   some rather interesting properties but unfortunately will not be covered in
+   this talk (ask me more if interested!).
    
    They make simple functions a lot more concise.
    
