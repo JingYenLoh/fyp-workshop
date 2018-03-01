@@ -241,7 +241,7 @@
      }
    #+END_SRC
    
-   Arrow functions were influenced by some other programming langguages where
+   Arrow functions were influenced by some other programming languages where
    they'd been working well. All arrow functions are anonymous, which gives it
    some rather interesting properties but unfortunately will not be covered in
    this talk (ask me more if interested!).
