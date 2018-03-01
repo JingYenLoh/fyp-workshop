@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<title>FYP Workshop Class example</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<body>
+
+<script>
+var p = function(name, age)  {  
+  if  (!(this  instanceof  p))  {  
+  throw  new  Error("Object is not an instance of p.");  
+  }
+  this.name = name;
+  this.age = age;  
+};
+
+p.prototype.details =  function()  {  
+  alert(`Name: ${this.name}\nAge: ${this.age}`);
+};
+
+var p = new p('Joshua', 21)
+p.details()
+
+let Character = function () {
+   this.name = '_blank_';
+   this.age = 0;
+}
+
+let newPlayer = new Character(); // {name: '_blank_', age: 0}
+//add properties in s function's prototype
+Character.prototype.age = 20;
+Character.prototype.gender = 'Unknown';
+
+console.log(newPlayer.name) // _blank_
+console.log(newPlayer.age) // 0
+// The prototype also has a 'age' property of value 20 but it's not visited. 
+// This is called "property shadowing.
+console.log(newPlayer.gender); // Unknown
+// newPlayer object does not own the property 'gender'. Hence, check
+// the prototype chain newPlayer.[[Prototype]] and the value is 'Unknown'.
+console.log(newPlayer.class) // undefined
+// newPlayer object does not own the property 'class'.  Hence, check
+// the prototype chain newPlayer.[[Prototype]].[[Prototype]] and the value is 'null'
+// no property found, return undefined.
+
+class Person {
+  constructor(name, age) {
+      this.name = name;
+      this.age = age;
+  }
+
+  get details() {
+    return this.greet();
+  }
+
+  greet() {
+    return `Hello. My name is ${this.name} and I am ${this.age} years old.`;
+  }
+
+  static predict(person) {
+    if(!this instanceof(Person)) {
+      throw new Error("Use the 'new' keyword when constructing a Person object.");  
+    } else if(person.age > 65) {
+      console.log("You are a senior citizen.");
+    } else {
+      console.log("You are NOT a senior citizen.");
+    }
+  }
+}
+
+class Employee extends Person {
+    constructor(name, age, position, salary) {
+      super(name, age);
+      this.position = position;
+      this.salary = salary;
+    }
+
+    print() {
+      console.log(`You are a ${this.position} and your income is $${this.salary}`)
+    }
+
+    greet() {
+      const greetings = super.greet();
+      console.log(`${greetings} I am a successful person!`);
+    }
+}
+
+const p1 = new Person('Joshua', 20);
+
+console.log(p1.details); // "Hello. My name is Joshua and I am 20 years old."
+Person.predict(p1); // "You are NOT a senior citizen."
+
+const p2 = new Employee('John', 70, 'Director', 15000);
+
+p2.print() // You are a Director and your income is 15000
+Person.predict(p2); // "You are a senior citizen."
+p2.greet() // Hello. My name is John and I am 70 years old. I am a successful person!
+</script>
+
+</body>
+</html>

@@ -144,8 +144,8 @@ As mentioned in the general description of this section, ES6 Classes are syntact
 
 ```js
 var Person = function(name, age)  {
-  if(!(this instanceof Person))  {
-    throw  new  Error("Use the 'new' keyword when constructing a Person object.");  
+  if(!(this instanceof Person)) {
+    throw new Error("Use the 'new' keyword when constructing a Person object.");  
   }
   this.name = name;
   this.age = age;  
@@ -189,7 +189,72 @@ console.log(newPlayer.class) // undefined
 // the prototype chain newPlayer.[[Prototype]].[[Prototype]] and the value is 'null'
 // no property found, return undefined.
 ```
-Each object in Javascript has a private property which stores an association link to another object called its prototype. That prototype object has a prototype of its own, and so on until an object is reached with null as its prototype. Because null has no prototype, it serves as the final link in this prototype chain. 
+Each object in Javascript has a private property which stores an association link to another object called its prototype. That prototype object has a prototype of its own, and so on until an object is reached with null as its prototype. Because null has no prototype, it serves as the final link in this prototype chain.
+
+### Implementation of Classes
+There are two ways to define a Class. Similar to function declarations and function expressions, the class syntax has two components:  class declarations and class expressions. In this workshop, we will be covering 
+**class declarations**. However, you can refer to online resources to find out more about [class expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes).
+
+It is easy to set up a class instance and establish inheritance hierarchies using the new ES6 syntax.The code snippet below creates a class called 'Person' and defining the associating the respective function properties to the object:
+```js
+// ES6
+class Person {
+  constructor(name, age) {
+      this.name = name;
+      this.age = age;
+  }
+
+  get details() {
+    return this.greet();
+  }
+
+  greet() {
+    return `Hello. My name is ${this.name} and I am ${this.age} years old.`;
+  }
+
+  static predict(person) {
+    if(!this instanceof(Person)) {
+      throw new Error("Use the 'new' keyword when constructing a Person object.");  
+    } else if(person.age > 65) {
+      console.log("You are a senior citizen.");
+    } else {
+      console.log("You are NOT a senior citizen.");
+    }
+  }
+}
+
+const p1 = new Person('Joshua', 20);
+
+console.log(p1.details); // "Hello. My name is Joshua and I am 20 years old."
+Person.predict(p1); // "You are NOT a senior citizen."
+```
+_The bodies of class declarations and class expressions are executed in strict mode i.e. constructor, static and prototype methods, getter and setter functions are executed in strict mode._
+
+```js
+// class Person() {
+//  ...
+// }
+class Employee extends Person {
+  constructor(name, age, position, salary) {
+    super(name, age);
+    this.position = position;
+    this.salary = salary;
+  }
+
+  print() {
+    console.log(`You are a ${this.position} and your income is $${this.salary}`)
+  }
+
+  greet() {
+    const greetings = super.greet();
+    console.log(`${greetings} I am a successful person!`);
+  }
+}
+
+p2.print() // You are a Director and your income is 15000
+Person.predict(p2); // "You are a senior citizen."
+p2.greet() // Hello. My name is John and I am 70 years old. I am a successful person!
+```
 
 ## Promises<a id="sec-2-4"></a>
 
