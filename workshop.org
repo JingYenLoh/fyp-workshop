@@ -221,7 +221,7 @@
     #+BEGIN_SRC js
 
       try {
-          var supposedToBeInt = await someApiYouCantGuaranteeDatatypeOf(); // supposedToBeInt was actually '420'
+          var supposedToBeInt = someApiYouCantGuaranteeDatatypeOf(); // supposedToBeInt was actually '420'
           if (supposedToBeInt == 420) { // Please use strict equality here !!
               // Do the right stuff
           } else {
