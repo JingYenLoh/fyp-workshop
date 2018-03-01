@@ -1,4 +1,5 @@
 #+TITLE: FYP preparation workshop
+#+AUTHOR: Jing Yen Loh, Chua Bing Quan, Joshua Yap
 
 This contains the materials for my Final Year Project preparation workshop. This
 was designed for my FYP team but hopefully will be of use to other interested
@@ -18,4 +19,3 @@ groups as well.
   Please do propose new topics if you feel they are relevant based on personal
   experience.
      
-* TODO To be determined
