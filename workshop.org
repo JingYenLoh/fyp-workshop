@@ -392,10 +392,8 @@
           }
       }
     #+END_SRC
-    However, the above code actually creates a callback *every single time*
-    ~MyButton~ renders. This is due to the arrow function being anonymous, which
-    unfortunately I don't have time to cover. The impact of this is obviously
-    performance.
+    However, the above code actually creates a new ~handleClick~ *every single
+    time* ~MyButton~ renders. The impact of this is obviously performance.
     
     Alternatively, you can use this /experimental/ syntax with arrow functions.
     #+BEGIN_SRC js
