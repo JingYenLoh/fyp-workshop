@@ -160,7 +160,7 @@ var user = new  Person('Joshua', 21)
 user.details()	
 ```
 
-As you can see, the 'Person' variable is an instance of an object. It currently has a function property called details. When trying to access a property of an object,the property will not only pursue on the object but on the prototype of the object, the prototype of the prototype, and so on until the end of the prototype chain is reached or there is another matching property name in the prototypical chain. To elaborate more about this, go through the following code snippet:
+As you can see, the 'Person' variable is an instance of an object. It currently has a function property called 'details'. When  accessing a property of an object,the property will not only pursue on the object but on the prototype of the object, the prototype of the prototype, and so on until the end of the prototype chain is reached or there is another matching property name in the prototypical chain. To elaborate more about concept, go through the following code snippet:
 
 ```js
 let Character = function () {
