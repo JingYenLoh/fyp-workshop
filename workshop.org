@@ -241,10 +241,10 @@
      }
    #+END_SRC
    
-   - [ ] Something about anonymous
-   
    Arrow functions were influenced by CoffeeScript, a functional programming
-   language that transpiled into JavaScript.
+   language that transpiled into JavaScript. All arrow functions are
+   anonymous, which gives it some rather interesting properties but
+   unfortunately will not be covered in this talk (ask me more if interested!).
    
    They make simple functions a lot more concise.
    
@@ -271,8 +271,164 @@
          .then(json => console.log(json))
    #+END_SRC
    
-   But surely they weren't added just for a little syntactic sugar?
+   But surely they weren't added just for syntactic sugar? We already have
+   anonymous functions, so what's the purpose of this funny looking arrow thing
+   besides saving some lines?
+   
+*** ~this~
+    +Remember-when-we-talked-about-how-functions-formed-a-/scope/-earlier?-It+
+    +turns-out-that-variables-aren't-the-only-thing-that-a-function-scope+
+    +encloses.-The-~this~-keyword-refers-to-the-/execution-context/-of-the+
+    +function,-and-is-one-of-the-things-that-are-bound+
+    
+    After very careful consideration, I've decided not to dive into the details
+    of how ~this~ works. It's one of the most confusing parts of JavaScript, and
+    I don't feel confident I can convey all the rules within this time frame.
+    
+    I'd like to sum it up as "it's complicated":
+    1. If the ~new~ keyword is used when calling the function, ~this~ inside the function is a brand new object.
+    2. If ~apply~, ~call,~ or ~bind~ are used to call a function, ~this~ inside the function is the object that is passed in as the argument.
+    3. If a function is called as a method — that is, if dot notation is used to invoke the function, ~this~ is the object that the function is a property of. In other words, when a dot is to the left of a function invocation, ~this~ is the object to the left of the dot. (ƒ symbolizes function in the code blocks)
+    4. If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, ~this~ is the global object. In a browser, it’s ~window~.
+    5. If multiple of the above rules apply, the rule that is higher wins and will set the ~this~ value.
+    6. If the function is an ES2015 arrow function (~=>~), it ignores all the rules above and receives the ~this~ value of its surrounding scope at the time it’s created. To determine ~this~, go one line above the arrow function’s creation and see what the value of ~this~ is there. It will be the same in the arrow function.
 
+    [[https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3][Medium article about this]]
+    
+    Basically, ~this~ is something that gets pretty confusing. Depending on the
+    context, it may refer to very different things.
+    
+    For arrow functions though, things are a little more predictable. Notice
+    point 6 from above. Arrow functions /lexically/ bind their context, meaning
+    ~this~ in an arrow function will simply be the same ~this~ as the one
+    surrounding the function.
+*** Example
+    The following is an example of a component in React.
+    #+BEGIN_SRC js
+      import React, { Component } from 'react'
+
+      export default class MyButton extends Component {
+          constructor (props) {
+              super(props)
+              this.state = { isEnabled: false }
+          }
+
+          render () {
+              return (
+                  <button onClick={this.handleClick}>
+                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                  </button>
+              )
+          }
+
+          handleClick () {
+              this.setState(state => ({
+                  isEnabled: !this.state.isEnabled
+              }))
+          }
+      }
+    #+END_SRC
+    It's supposed to display a button that shows "Enabled" or "Disabled".
+    depending on whether how many times it's been clicked. Notice that
+    ~onClick~ is set to ~handleClick~. Let's see what this does.
+    
+    ~handleClick~ calls ~this.setState~, which is a method in React that updates
+    the current state. Judging from the code, you'd expect this to toggle the
+    value of ~isEnabled~. If you actually click the button, however, you'd
+    get an error message saying ~this~ is undefined (running in development
+    mode).
+    
+    The reason for that is: ~this~ is bound to handleClick in this context. To
+    get around that, we have to /bind/ ~handleClick~ in the constructor of
+    ~MyButton~.
+    #+BEGIN_SRC js
+      import React, { Component } from 'react'
+
+      export default class MyButton extends Component {
+          constructor (props) {
+              super(props)
+              this.state = { isEnabled: false }
+              this.handleClick = this.handleClick.bind(this)
+          }
+
+          render () {
+              return (
+                  <button onClick={this.handleClick}>
+                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                  </button>
+              )
+          }
+
+          handleClick () {
+              this.setState(state => ({
+                  isEnabled: !this.state.isEnabled
+              }))
+          }
+      }
+    #+END_SRC
+    
+    Another way you can get around this is by using arrow functions:
+    #+BEGIN_SRC js
+      import React, { Component } from 'react'
+
+      export default class MyButton extends Component {
+          constructor (props) {
+              super(props)
+              this.state = { isEnabled: false }
+          }
+
+          render () {
+              return (
+                  <button onClick={() => this.handleClick}>
+                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                  </button>
+              )
+          }
+
+          handleClick () {
+              this.setState(state => ({
+                  isEnabled: !this.state.isEnabled
+              }))
+          }
+      }
+    #+END_SRC
+    However, the above code actually creates a callback *every single time*
+    ~MyButton~ renders. This is due to the arrow function being anonymous, which
+    unfortunately I don't have time to cover. The impact of this is obviously
+    performance.
+    
+    Alternatively, you can use this /experimental/ syntax with arrow functions.
+    #+BEGIN_SRC js
+      import React, { Component } from 'react'
+
+      export default class MyButton extends Component {
+          constructor (props) {
+              super(props)
+              this.state = { isEnabled: false }
+          }
+
+          render () {
+              return (
+                  <button onClick={this.handleClick}>
+                      {this.state.isEnabled ? 'Enabled' : 'Disabled'}
+                  </button>
+              )
+          }
+
+          handleClick = () => {
+              this.setState(state => ({
+                  isEnabled: !this.state.isEnabled
+              }))
+          }
+      }
+    #+END_SRC
+*** Conclusion
+    The main point I'd like to get across in this section is that
+    *arrow functions do not replace normal functions*. They are simply tools
+    that work alongside the traditional ~function~s, and they're useful in
+    certain cases e.g. where you'd previously have to use ~.bind~. Also, they're
+    great for when you need simple, consise callbacks. However, they *do not*
+    substitute the traditional ~function~ keyword.
 ** "Classes"
 ** Promises
 ** Generic tooling
