@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Presentation about random stuff</title>
+<meta name="author" content="(Jing Yen Loh)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="file:///C:/Users/Loh Jing Yen/org/reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="file:///C:/Users/Loh Jing Yen/org/reveal.js/css/theme/moon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'file:///C:/Users/Loh Jing Yen/org/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Presentation about random stuff</h1><h2 class="author">Jing Yen Loh</h2><p class="date">Created: 2018-03-02 Fri 02:12</p>
+</section>
+<section id="table-of-contents">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#/slide-org372e3bc">1. Scopes + let &amp; const</a>
+<ul>
+<li><a href="#/slide-org5904242">1.1. Scopes</a></li>
+<li><a href="#/slide-orgc1151c2">1.2. Personal preference</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org11c1071">2. Equality</a>
+<ul>
+<li><a href="#/slide-orgea05705">2.1. Problem</a></li>
+<li><a href="#/slide-org2e407be">2.2. Solution</a></li>
+<li><a href="#/slide-org3761634">2.3. Examples</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org80d36b9">3. Arrow Functions</a>
+<ul>
+<li><a href="#/slide-orgc949840">3.1. <code>this</code></a></li>
+<li><a href="#/slide-org27f2793">3.2. Example</a></li>
+<li><a href="#/slide-org123d5ea">3.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#/slide-orgd705ac6">4. "Classes"</a>
+<ul>
+<li><a href="#/slide-prototype">4.1. Prototype</a></li>
+<li><a href="#/slide-implementation-of-classes">4.2. Implementation of Classes</a></li>
+</ul>
+</li>
+<li><a href="#/slide-promises">5. Promises</a></li>
+<li><a href="#/slide-orgf73225b">6. Generic tooling</a>
+<ul>
+<li><a href="#/slide-org97fc4b6">6.1. ESLint</a></li>
+<li><a href="#/slide-orgc43e878">6.2. Webpack</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section>
+<section id="slide-org372e3bc">
+<h2 id="org372e3bc"><span class="section-number-2">1</span> Scopes + let &amp; const</h2>
+<p>
+In ES6, 2 new keywords were introduced, <code>let</code> and <code>const</code>.
+</p>
+
+<p>
+Similar to <code>var</code>, they're used for variable declarations.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">let</span> <span style="color: #268bd2;">x</span> = <span style="color: #6c71c4;">666000</span>;
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">y</span> = <span style="color: #6c71c4;">420</span>;
+
+<span style="color: #859900; font-weight: bold;">return</span> x + y;
+</pre>
+</div>
+
+<p>
+<code>const</code> is similar to the <code>const</code> you've seen in C#, where the value of the
+constant cannot be changed through re-assignment, and it cannot be
+redeclared. Here's a little snippet directly copy pasted from MDN to
+illustrate what I mean.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">number</span> = <span style="color: #6c71c4;">42</span>;
+
+<span style="color: #859900; font-weight: bold;">try</span> <span style="color: #2aa198;">{</span>
+    number = <span style="color: #6c71c4;">99</span>;
+<span style="color: #2aa198;">}</span> <span style="color: #859900; font-weight: bold;">catch</span><span style="color: #2aa198;">(</span>err<span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+    console.log<span style="color: #b58900;">(</span>err<span style="color: #b58900;">)</span>;
+    <span style="color: #586e75;">// </span><span style="color: #586e75;">expected output: TypeError: invalid assignment to const `number'</span>
+    <span style="color: #586e75;">// </span><span style="color: #586e75;">Note - error messages will vary depending on browser</span>
+<span style="color: #2aa198;">}</span>
+
+console.log<span style="color: #2aa198;">(</span>number<span style="color: #2aa198;">)</span>;
+<span style="color: #586e75;">// </span><span style="color: #586e75;">expected output: 42</span>
+</pre>
+</div>
+
+<p>
+One common misconception, however, is that <code>const</code> makes the value it holds
+immutable (meaning it cannot be modified). This is <b>not true</b>.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">arr</span> = <span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">2</span>, <span style="color: #6c71c4;">3</span>, <span style="color: #6c71c4;">4</span>, <span style="color: #6c71c4;">5</span><span style="color: #2aa198;">]</span>;
+
+arr.push<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">6</span><span style="color: #2aa198;">)</span>;
+
+<span style="color: #859900; font-weight: bold;">return</span> arr; <span style="color: #586e75;">// </span><span style="color: #586e75;">returns [1, 2, 3, 4, 5, 6]</span>
+</pre>
+</div>
+<p>
+With <code>const</code>, you're still able to mutate the value it's holding. You simply
+can't change the <i>reference</i>.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">arr</span> = <span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span>, <span style="color: #6c71c4;">2</span>, <span style="color: #6c71c4;">3</span>, <span style="color: #6c71c4;">4</span>, <span style="color: #6c71c4;">5</span><span style="color: #2aa198;">]</span>;
+
+<span style="color: #859900; font-weight: bold;">let</span> <span style="color: #268bd2;">copy</span> = <span style="color: #2aa198;">[</span>...arr, <span style="color: #6c71c4;">6</span><span style="color: #2aa198;">]</span>;
+
+arr = copy; <span style="color: #586e75;">// </span><span style="color: #586e75;">TypeError: Assignment to constant variable</span>
+</pre>
+</div>
+
+<p>
+<code>let</code> works similarly to <code>var</code>, allowing you to modify references.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">let</span> <span style="color: #268bd2;">x</span> = <span style="color: #6c71c4;">1</span>;
+console.log<span style="color: #2aa198;">(</span>x<span style="color: #2aa198;">)</span>;
+
+x = <span style="color: #2aa198;">'chicken'</span>;
+console.log<span style="color: #2aa198;">(</span>x<span style="color: #2aa198;">)</span>;
+
+x = <span style="color: #2aa198;">[</span><span style="color: #2aa198;">'1'</span>, <span style="color: #2aa198;">'2'</span>, <span style="color: #2aa198;">'3'</span>, <span style="color: #2aa198;">'4'</span>, <span style="color: #2aa198;">'5'</span><span style="color: #2aa198;">]</span>.map<span style="color: #2aa198;">(</span>parseInt<span style="color: #2aa198;">)</span>;
+<span style="color: #859900; font-weight: bold;">return</span> x;
+</pre>
+</div>
+
+<p>
+Wait&#x2026; if so&#x2026;. what's the purpose of <code>let</code>? Why not just keep using <code>var</code>,
+and keep <code>const</code> alongside that?
+</p>
+
+<p>
+We have to go a little deeper.
+</p>
+</section>
+<section id="slide-org5904242">
+<h3 id="org5904242"><span class="section-number-3">1.1</span> Scopes</h3>
+<p>
+In computer science, a closure is a&#x2026;
+</p>
+<p class="verse">
+technique for implementing lexically scoped name binding<br />
+in a language with first-class functions &#x2013; Wikipedia<br />
+</p>
+
+<p>
+<b>What</b> is that nonsense?!?!?! Ok, ok, let's ignore the wikipedia definitions
+today. Here's something that's a little different from C# or Java:
+<i>variables in JavaScript are actually "function scoped".</i>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">aThousand</span> <span style="color: #2aa198;">()</span> <span style="color: #2aa198;">{</span>
+    <span style="color: #859900; font-weight: bold;">for</span> <span style="color: #b58900;">(</span><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #268bd2;">i</span> = <span style="color: #6c71c4;">0</span>; i &lt; <span style="color: #6c71c4;">1000</span>; i++<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">Do nothing, I'm just gonna use</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">a for loop to illustrate</span>
+    <span style="color: #b58900;">}</span>
+    <span style="color: #859900; font-weight: bold;">return</span> i;
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #859900; font-weight: bold;">return</span> aThousand<span style="color: #2aa198;">()</span>;
+</pre>
+</div>
+
+<p>
+The reason that was possible is because the <i>scope</i> of <code>i</code> wasn't just
+limited to the for loop, it's actually a declaration that can be accessed
+within the function itself.
+</p>
+
+<p>
+It turns out that a fuction is a <b>closure</b> in JS. Think of it as the
+function being the thing that creates a <i>scope</i>.
+</p>
+
+<p>
+This is a little different from languages you're probably used to, like C#.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-csharp">int AThousand()
+{
+    for (var i = 0; i &lt; 1000; i++)
+    {
+        // Do nothing
+    }
+    return i; // The name 'i' does not exist in the current context
+}
+</pre>
+</div>
+
+<p>
+I'm waving my hand with a lot of magic here, but essentially think of
+variables in these language as <code>{}</code> scoped, that is to say, a pair of curly
+braces forms a scope.
+</p>
+
+<p>
+Thus, one reason <code>let</code> and <code>const</code> were introduced was to make things more
+predictable to people who are already accustomed to such languages.
+</p>
+</section>
+<section id="slide-orgc1151c2">
+<h3 id="orgc1151c2"><span class="section-number-3">1.2</span> Personal preference</h3>
+<p>
+I use <code>const</code> almost exclusively, unless I know I explicitly want a mutable
+reference, in which case I use <code>let</code>. I find this helps me reason about my
+code better. YMMV.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org11c1071">
+<h2 id="org11c1071"><span class="section-number-2">2</span> Equality</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+</section>
+<section id="slide-orgea05705">
+<h3 id="orgea05705"><span class="section-number-3">2.1</span> Problem</h3>
+<p>
+What do you think is gonna happen below?
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4;">1</span> == <span style="color: #6c71c4;">1</span>;
+</pre>
+</div>
+
+<p>
+What about this?
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4;">1</span> === <span style="color: #6c71c4;">1</span>;
+</pre>
+</div>
+
+<p>
+😲 So what's the difference ??!?!?
+</p>
+
+<p>
+Well, let's try this&#x2026;
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4;">1</span> == <span style="color: #2aa198;">'1'</span>;
+</pre>
+</div>
+
+<p>
+<b>Huh?</b>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4;">1</span> == <span style="color: #2aa198;">[</span><span style="color: #6c71c4;">1</span><span style="color: #2aa198;">]</span>;
+</pre>
+</div>
+
+<p>
+<b>!!!</b>
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js" id="number-compare-boolean"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #6c71c4;">1</span> == <span style="color: #268bd2; font-weight: bold;">true</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">wat</span>
+</pre>
+</div>
+
+<pre class="example">
+true
+
+</pre>
+
+<p>
+Ok, ok, we get the point. Why does this happen?
+</p>
+
+<p>
+In JavaScript, <code>==</code> is the <i>abstract equality operator</i>. When comparing
+values with <code>==</code>, it converts both values to a common type. As an example,
+with <a href="#/slide-org1cd5364">1</a>, it converts the <code>true</code> to a number before
+comparing.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> Number<span style="color: #2aa198;">(</span><span style="color: #268bd2; font-weight: bold;">true</span><span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<p>
+So since 1 is equal to 1, <code>1 == true</code> evaluates to true.
+</p>
+
+</section>
+<section id="slide-org2e407be">
+<h3 id="org2e407be"><span class="section-number-3">2.2</span> Solution</h3>
+<p>
+<code>===</code> is the strict equality operator. If the values are of different types,
+they're unequal.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js">console.log<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span> === <span style="color: #2aa198;">'1'</span><span style="color: #2aa198;">)</span>;
+console.log<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span> === <span style="color: #b58900;">[</span><span style="color: #6c71c4;">1</span><span style="color: #b58900;">]</span><span style="color: #2aa198;">)</span>;
+console.log<span style="color: #2aa198;">(</span><span style="color: #6c71c4;">1</span> === <span style="color: #268bd2; font-weight: bold;">true</span><span style="color: #2aa198;">)</span>;
+<span style="color: #859900; font-weight: bold;">return</span> <span style="color: #2aa198;">(</span><span style="color: #268bd2; font-weight: bold;">undefined</span> === <span style="color: #268bd2; font-weight: bold;">null</span><span style="color: #2aa198;">)</span>;
+</pre>
+</div>
+
+<p>
+Well, most of the time anyway. You still get magical edge
+cases like this.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2; font-weight: bold;">NaN</span> === <span style="color: #268bd2; font-weight: bold;">NaN</span>;
+</pre>
+</div>
+
+<p>
+TLDR; with JavaScript, <b>ALWAYS</b> use the strict equality operator (<code>===</code>) for
+comparison unless you really know what you're doing with <code>==</code>.
+</p>
+
+</section>
+<section id="slide-org3761634">
+<h3 id="org3761634"><span class="section-number-3">2.3</span> Examples</h3>
+<p>
+Therefore, avoid writing things like
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js">
+<span style="color: #859900; font-weight: bold;">try</span> <span style="color: #2aa198;">{</span>
+    <span style="color: #859900; font-weight: bold;">var</span> <span style="color: #268bd2;">supposedToBeInt</span> = someApiYouCantGuaranteeDatatypeOf<span style="color: #b58900;">()</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">supposedToBeInt was actually '420'</span>
+    <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #b58900;">(</span>supposedToBeInt == <span style="color: #6c71c4;">420</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Please use strict equality here !!</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">Do the right stuff</span>
+    <span style="color: #b58900;">}</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">throw</span> <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Error</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">`Hey, it wasn't 420 !!`</span><span style="color: #268bd2;">)</span>;
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span> <span style="color: #859900; font-weight: bold;">catch</span> <span style="color: #2aa198;">(</span>e<span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+    console.error<span style="color: #b58900;">(</span>e<span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org80d36b9">
+<h2 id="org80d36b9"><span class="section-number-2">3</span> Arrow Functions</h2>
+<p>
+Consider the following function:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js" id="normal-js-function-example"><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">multiply</span> <span style="color: #2aa198;">(</span><span style="color: #268bd2;">x</span>, <span style="color: #268bd2;">y</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+    <span style="color: #859900; font-weight: bold;">return</span> x * y;
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<p>
+Arrow functions were influenced by some other programming languages where
+they'd been working well. All arrow functions are anonymous, which gives it
+some rather interesting properties but unfortunately will not be covered in
+this talk (ask me more if interested!).
+</p>
+
+<p>
+They make simple functions a lot more concise.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js" id="arrow-function-example"><span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">multiply</span> = <span style="color: #2aa198;">(</span>x, y<span style="color: #2aa198;">)</span> =&gt; x * y;
+</pre>
+</div>
+
+<p>
+The difference is particularly apparent when they're passed as arguments e.g.
+in Promise chains.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js" id="promise-chain-comparison">fetch<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'www.example.com/api/v3'</span><span style="color: #2aa198;">)</span>
+    .then<span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">response</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> response.json<span style="color: #268bd2;">()</span>;
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+    .then<span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">json</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        console.log<span style="color: #268bd2;">(</span>json<span style="color: #268bd2;">)</span>;
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+
+<span style="color: #586e75;">/* </span><span style="color: #586e75;">Versus */</span>
+fetch<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'www.example.com/api/v3'</span><span style="color: #2aa198;">)</span>
+    .then<span style="color: #2aa198;">(</span>response =&gt; response.json<span style="color: #b58900;">()</span><span style="color: #2aa198;">)</span>
+    .then<span style="color: #2aa198;">(</span>json =&gt; console.log<span style="color: #b58900;">(</span>json<span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<p>
+But surely they weren't added just for syntactic sugar? We already have
+anonymous functions, so what's the purpose of this funny looking arrow thing
+besides saving some lines?
+</p>
+
+</section>
+<section id="slide-orgc949840">
+<h3 id="orgc949840"><span class="section-number-3">3.1</span> <code>this</code></h3>
+<p>
+<del>Remember-when-we-talked-about-how-functions-formed-a-<i>scope</i>-earlier?-It</del>
+<del>turns-out-that-variables-aren't-the-only-thing-that-a-function-scope</del>
+<del>encloses.-The-<code>this</code>-keyword-refers-to-the-<i>execution-context</i>-of-the</del>
+<del>function,-and-is-one-of-the-things-that-are-bound</del>
+</p>
+
+<p>
+After very careful consideration, I've decided not to dive into the details
+of how <code>this</code> works. It's one of the most confusing parts of JavaScript, and
+I don't feel confident I can convey all the rules within this time frame.
+</p>
+
+<p>
+I'd like to sum it up as "it's complicated":
+</p>
+<ol>
+<li>If the <code>new</code> keyword is used when calling the function, <code>this</code> inside the function is a brand new object.</li>
+<li>If <code>apply</code>, <code>call,</code> or <code>bind</code> are used to call a function, <code>this</code> inside the function is the object that is passed in as the argument.</li>
+<li>If a function is called as a method — that is, if dot notation is used to invoke the function, <code>this</code> is the object that the function is a property of. In other words, when a dot is to the left of a function invocation, <code>this</code> is the object to the left of the dot. (ƒ symbolizes function in the code blocks)</li>
+<li>If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, <code>this</code> is the global object. In a browser, it’s <code>window</code>.</li>
+<li>If multiple of the above rules apply, the rule that is higher wins and will set the <code>this</code> value.</li>
+<li>If the function is an ES2015 arrow function (<code>=&gt;</code>), it ignores all the rules above and receives the <code>this</code> value of its surrounding scope at the time it’s created. To determine <code>this</code>, go one line above the arrow function’s creation and see what the value of <code>this</code> is there. It will be the same in the arrow function.</li>
+
+</ol>
+
+<p>
+<a href="https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3">Medium article about this</a>
+</p>
+
+<p>
+Basically, <code>this</code> is something that gets pretty confusing. Depending on the
+context, it may refer to very different things.
+</p>
+
+<p>
+For arrow functions though, things are a little more predictable. Notice
+point 6 from above. Arrow functions <i>lexically</i> bind their context, meaning
+<code>this</code> in an arrow function will simply be the same <code>this</code> as the one
+surrounding the function.
+</p>
+</section>
+<section id="slide-org27f2793">
+<h3 id="org27f2793"><span class="section-number-3">3.2</span> Example</h3>
+<p>
+The following is an example of a component in React.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
+
+<span style="color: #859900; font-weight: bold;">export</span> <span style="color: #859900; font-weight: bold;">default</span> <span style="color: #859900; font-weight: bold;">class</span> MyButton <span style="color: #859900; font-weight: bold;">extends</span> Component <span style="color: #2aa198;">{</span>
+    constructor <span style="color: #b58900;">(</span>props<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">super</span><span style="color: #268bd2;">(</span>props<span style="color: #268bd2;">)</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.state = <span style="color: #268bd2;">{</span> isEnabled: <span style="color: #268bd2; font-weight: bold;">false</span> <span style="color: #268bd2;">}</span>
+    <span style="color: #b58900;">}</span>
+
+    render <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2;">(</span>
+            &lt;button onClick=<span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.handleClick<span style="color: #6c71c4;">}</span>&gt;
+                <span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled ? <span style="color: #2aa198;">'Enabled'</span> : <span style="color: #2aa198;">'Disabled'</span><span style="color: #6c71c4;">}</span>
+            &lt;/button&gt;
+        <span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    handleClick <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.setState<span style="color: #268bd2;">(</span>state =&gt; <span style="color: #6c71c4;">(</span><span style="color: #859900;">{</span>
+            isEnabled: !<span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled
+        <span style="color: #859900;">}</span><span style="color: #6c71c4;">)</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+<p>
+It's supposed to display a button that shows "Enabled" or "Disabled".
+depending on whether how many times it's been clicked. Notice that
+<code>onClick</code> is set to <code>handleClick</code>. Let's see what this does.
+</p>
+
+<p>
+<code>handleClick</code> calls <code>this.setState</code>, which is a method in React that updates
+the current state. Judging from the code, you'd expect this to toggle the
+value of <code>isEnabled</code>. If you actually click the button, however, you'd
+get an error message saying <code>this</code> is undefined (running in development
+mode).
+</p>
+
+<p>
+The reason for that is: <code>this</code> is bound to handleClick in this context. To
+get around that, we have to <i>bind</i> <code>handleClick</code> in the constructor of
+<code>MyButton</code>.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
+
+<span style="color: #859900; font-weight: bold;">export</span> <span style="color: #859900; font-weight: bold;">default</span> <span style="color: #859900; font-weight: bold;">class</span> MyButton <span style="color: #859900; font-weight: bold;">extends</span> Component <span style="color: #2aa198;">{</span>
+    constructor <span style="color: #b58900;">(</span>props<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">super</span><span style="color: #268bd2;">(</span>props<span style="color: #268bd2;">)</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.state = <span style="color: #268bd2;">{</span> isEnabled: <span style="color: #268bd2; font-weight: bold;">false</span> <span style="color: #268bd2;">}</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.handleClick = <span style="color: #268bd2; font-weight: bold;">this</span>.handleClick.bind<span style="color: #268bd2;">(</span><span style="color: #268bd2; font-weight: bold;">this</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    render <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2;">(</span>
+            &lt;button onClick=<span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.handleClick<span style="color: #6c71c4;">}</span>&gt;
+                <span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled ? <span style="color: #2aa198;">'Enabled'</span> : <span style="color: #2aa198;">'Disabled'</span><span style="color: #6c71c4;">}</span>
+            &lt;/button&gt;
+        <span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    handleClick <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.setState<span style="color: #268bd2;">(</span>state =&gt; <span style="color: #6c71c4;">(</span><span style="color: #859900;">{</span>
+            isEnabled: !<span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled
+        <span style="color: #859900;">}</span><span style="color: #6c71c4;">)</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+
+<p>
+Another way you can get around this is by using arrow functions:
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
+
+<span style="color: #859900; font-weight: bold;">export</span> <span style="color: #859900; font-weight: bold;">default</span> <span style="color: #859900; font-weight: bold;">class</span> MyButton <span style="color: #859900; font-weight: bold;">extends</span> Component <span style="color: #2aa198;">{</span>
+    constructor <span style="color: #b58900;">(</span>props<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">super</span><span style="color: #268bd2;">(</span>props<span style="color: #268bd2;">)</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.state = <span style="color: #268bd2;">{</span> isEnabled: <span style="color: #268bd2; font-weight: bold;">false</span> <span style="color: #268bd2;">}</span>
+    <span style="color: #b58900;">}</span>
+
+    render <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2;">(</span>
+            &lt;button onClick=<span style="color: #6c71c4;">{</span><span style="color: #859900;">()</span> =&gt; <span style="color: #268bd2; font-weight: bold;">this</span>.handleClick<span style="color: #6c71c4;">}</span>&gt;
+                <span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled ? <span style="color: #2aa198;">'Enabled'</span> : <span style="color: #2aa198;">'Disabled'</span><span style="color: #6c71c4;">}</span>
+            &lt;/button&gt;
+        <span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    handleClick <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.setState<span style="color: #268bd2;">(</span>state =&gt; <span style="color: #6c71c4;">(</span><span style="color: #859900;">{</span>
+            isEnabled: !<span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled
+        <span style="color: #859900;">}</span><span style="color: #6c71c4;">)</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+<p>
+However, the above code actually creates a new <code>handleClick</code> <b>every single
+time</b> <code>MyButton</code> renders. The impact of this is obviously performance.
+</p>
+
+<p>
+Alternatively, you can use this <i>experimental</i> syntax with arrow functions.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">import</span> React, <span style="color: #2aa198;">{</span> Component <span style="color: #2aa198;">}</span> from <span style="color: #2aa198;">'react'</span>
+
+<span style="color: #859900; font-weight: bold;">export</span> <span style="color: #859900; font-weight: bold;">default</span> <span style="color: #859900; font-weight: bold;">class</span> MyButton <span style="color: #859900; font-weight: bold;">extends</span> Component <span style="color: #2aa198;">{</span>
+    constructor <span style="color: #b58900;">(</span>props<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">super</span><span style="color: #268bd2;">(</span>props<span style="color: #268bd2;">)</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.state = <span style="color: #268bd2;">{</span> isEnabled: <span style="color: #268bd2; font-weight: bold;">false</span> <span style="color: #268bd2;">}</span>
+    <span style="color: #b58900;">}</span>
+
+    render <span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2;">(</span>
+            &lt;button onClick=<span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.handleClick<span style="color: #6c71c4;">}</span>&gt;
+                <span style="color: #6c71c4;">{</span><span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled ? <span style="color: #2aa198;">'Enabled'</span> : <span style="color: #2aa198;">'Disabled'</span><span style="color: #6c71c4;">}</span>
+            &lt;/button&gt;
+        <span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    handleClick = <span style="color: #b58900;">()</span> =&gt; <span style="color: #b58900;">{</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.setState<span style="color: #268bd2;">(</span>state =&gt; <span style="color: #6c71c4;">(</span><span style="color: #859900;">{</span>
+            isEnabled: !<span style="color: #268bd2; font-weight: bold;">this</span>.state.isEnabled
+        <span style="color: #859900;">}</span><span style="color: #6c71c4;">)</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+</pre>
+</div>
+</section>
+<section id="slide-org123d5ea">
+<h3 id="org123d5ea"><span class="section-number-3">3.3</span> Conclusion</h3>
+<p>
+The main point I'd like to get across in this section is that
+<b>arrow functions do not replace normal functions</b>. They are simply tools
+that work alongside the traditional <code>function~s, and they're useful in
+   certain cases e.g. where you'd previously have to use ~.bind</code>. Also, they're
+great for when you need simple, consise callbacks. However, they <b>do not</b>
+substitute the traditional <code>function</code> keyword.
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgd705ac6">
+<h2 id="orgd705ac6"><span class="section-number-2">4</span> "Classes"</h2>
+<p>
+Classes in Javascript was first introduced in ECMAScript® 2015. They are
+essentially <b>syntactical sugar</b> over Javascript's inheritance with
+prototype chaining. A reason why you would consider using ES6 Classes is
+almostly due to cleaner and simpler syntax. Will there be performance
+differences (In a positive note)? Probably the ECMAScript engine
+rendering the Javascript codes will be able to optimize a little better
+but there will probably be little to no significant difference in the
+way the script performs. Another reason why you should Classes is due to
+the fact that it is much easier to set up inheritance using the new ES6
+syntax. The "methods" provided by Classes look like those familiar to
+developers of class-based languages such as C#, Java, C++ etc. However,
+they are not the same. JavaScript remains prototype-based.
+</p>
+
+</section>
+<section id="slide-prototype">
+<h3 id="prototype"><a id="orge86ceee"></a><span class="section-number-3">4.1</span> Prototype</h3>
+<p>
+As mentioned in the general description of this section, ES6 Classes are
+syntactic sugar for the prototype chain system. To give an example:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">var</span> <span style="color: #268bd2;">Person</span> = <span style="color: #859900; font-weight: bold;">function</span><span style="color: #2aa198;">(</span><span style="color: #268bd2;">name</span>, <span style="color: #268bd2;">age</span><span style="color: #2aa198;">)</span>  <span style="color: #2aa198;">{</span>
+    <span style="color: #859900; font-weight: bold;">if</span><span style="color: #b58900;">(</span>!<span style="color: #268bd2;">(</span><span style="color: #268bd2; font-weight: bold;">this</span> <span style="color: #859900; font-weight: bold;">instanceof</span> <span style="color: #b58900;">Person</span><span style="color: #268bd2;">)</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">throw</span> <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Error</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"Use the 'new' keyword when constructing a Person object."</span><span style="color: #268bd2;">)</span>;  
+    <span style="color: #b58900;">}</span>
+    <span style="color: #268bd2; font-weight: bold;">this</span>.name = name;
+    <span style="color: #268bd2; font-weight: bold;">this</span>.age = age;  
+<span style="color: #2aa198;">}</span>;
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Add properties in Person function's prototype</span>
+Person.<span style="color: #268bd2; font-weight: bold;">prototype</span>.details = <span style="color: #859900; font-weight: bold;">function</span><span style="color: #2aa198;">()</span> <span style="color: #2aa198;">{</span>
+    alert<span style="color: #b58900;">(</span><span style="color: #2aa198;">`Name: ${this.name}\nAge: ${this.age}`</span><span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>;
+
+<span style="color: #859900; font-weight: bold;">var</span> <span style="color: #268bd2;">user</span> = <span style="color: #859900; font-weight: bold;">new</span>  <span style="color: #b58900;">Person</span><span style="color: #2aa198;">(</span><span style="color: #2aa198;">'Joshua'</span>, <span style="color: #6c71c4;">21</span><span style="color: #2aa198;">)</span>
+user.details<span style="color: #2aa198;">()</span>  
+</pre>
+</div>
+
+<p>
+As you can see, the 'Person' variable is an instance of an object. It
+currently has a function property called 'details'. When accessing a
+property of an object,the property will not only pursue on the object
+but on the prototype of the object, the prototype of the prototype, and
+so on until the end of the prototype chain is reached or there is
+another matching property name in the prototypical chain. To elaborate
+more about concept, go through the following code snippet:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #859900; font-weight: bold;">let</span> <span style="color: #268bd2;">Character</span> = <span style="color: #859900; font-weight: bold;">function</span> <span style="color: #2aa198;">()</span> <span style="color: #2aa198;">{</span>
+    <span style="color: #268bd2; font-weight: bold;">this</span>.name = <span style="color: #2aa198;">'_blank_'</span>;
+    <span style="color: #268bd2; font-weight: bold;">this</span>.age = <span style="color: #6c71c4;">0</span>;
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #859900; font-weight: bold;">let</span> <span style="color: #268bd2;">newPlayer</span> = <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Character</span><span style="color: #2aa198;">()</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">{name: '_blank_', age: 0}</span>
+<span style="color: #586e75;">//</span><span style="color: #586e75;">add properties in Character function's prototype</span>
+
+Character.<span style="color: #268bd2; font-weight: bold;">prototype</span>.age = <span style="color: #6c71c4;">20</span>;
+Character.<span style="color: #268bd2; font-weight: bold;">prototype</span>.gender = <span style="color: #2aa198;">'Unknown'</span>;
+
+console.log<span style="color: #2aa198;">(</span>newPlayer.name<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">_blank_</span>
+
+console.log<span style="color: #2aa198;">(</span>newPlayer.age<span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">0</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">The prototype also has a 'age' property of value 20 but it's not visited. </span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">This is called "property shadowing.</span>
+
+console.log<span style="color: #2aa198;">(</span>newPlayer.gender<span style="color: #2aa198;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">Unknown</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">newPlayer object does not own the property 'gender'. Hence, check</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">the prototype chain newPlayer.[[Prototype]] and the value is 'Unknown'.</span>
+
+console.log<span style="color: #2aa198;">(</span>newPlayer.<span style="color: #859900; font-weight: bold;">class</span><span style="color: #2aa198;">)</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">undefined</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">newPlayer object does not own the property 'class'.  Hence, check</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">the prototype chain newPlayer.[[Prototype]].[[Prototype]] and the value is 'null'</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">no property found, return undefined.</span>
+</pre>
+</div>
+
+<p>
+Each object in Javascript has a private property which stores an
+association link to another object called its prototype. That prototype
+object has a prototype of its own, and so on until an object is reached
+with null as its prototype. Because null has no prototype, it serves as
+the final link in this prototype chain.
+</p>
+</section>
+<section id="slide-implementation-of-classes">
+<h3 id="implementation-of-classes"><a id="org65a51cb"></a><span class="section-number-3">4.2</span> Implementation of Classes</h3>
+<p>
+There are two ways to define a Class. Similar to function declarations
+and function expressions, the class syntax has two components: class
+declarations and class expressions. In this workshop, we will be
+covering <b>class declarations</b>. However, you can refer to online
+resources to find out more about
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class expressions</a>.
+</p>
+
+<p>
+It is easy to set up a class instance and establish inheritance
+hierarchies using the new ES6 syntax.The code snippet below creates a
+class called 'Person' and defining the associating the respective
+function properties to the object:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">ES6</span>
+<span style="color: #859900; font-weight: bold;">class</span> Person <span style="color: #2aa198;">{</span>
+    constructor<span style="color: #b58900;">(</span>name, age<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #268bd2; font-weight: bold;">this</span>.name = name;
+        <span style="color: #268bd2; font-weight: bold;">this</span>.age = age;
+    <span style="color: #b58900;">}</span>
+
+    get details<span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #268bd2; font-weight: bold;">this</span>.greet<span style="color: #268bd2;">()</span>;
+    <span style="color: #b58900;">}</span>
+
+    greet<span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #2aa198;">`Hello. My name is ${this.name} and I am ${this.age} years old.`</span>;
+    <span style="color: #b58900;">}</span>
+
+    <span style="color: #859900; font-weight: bold;">static</span> predict<span style="color: #b58900;">(</span>person<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">if</span><span style="color: #268bd2;">(</span>!<span style="color: #268bd2; font-weight: bold;">this</span> <span style="color: #859900; font-weight: bold;">instanceof</span><span style="color: #6c71c4;">(</span>Person<span style="color: #6c71c4;">)</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+            <span style="color: #859900; font-weight: bold;">throw</span> <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Error</span><span style="color: #6c71c4;">(</span><span style="color: #2aa198;">"Use the 'new' keyword when constructing a Person object."</span><span style="color: #6c71c4;">)</span>;  
+        <span style="color: #268bd2;">}</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #859900; font-weight: bold;">if</span><span style="color: #268bd2;">(</span>person.age &gt; <span style="color: #6c71c4;">65</span><span style="color: #268bd2;">)</span> <span style="color: #268bd2;">{</span>
+            console.log<span style="color: #6c71c4;">(</span><span style="color: #2aa198;">"You are a senior citizen."</span><span style="color: #6c71c4;">)</span>;
+        <span style="color: #268bd2;">}</span> <span style="color: #859900; font-weight: bold;">else</span> <span style="color: #268bd2;">{</span>
+            console.log<span style="color: #6c71c4;">(</span><span style="color: #2aa198;">"You are NOT a senior citizen."</span><span style="color: #6c71c4;">)</span>;
+        <span style="color: #268bd2;">}</span>
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">p1</span> = <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Person</span><span style="color: #2aa198;">(</span><span style="color: #2aa198;">'Joshua'</span>, <span style="color: #6c71c4;">20</span><span style="color: #2aa198;">)</span>;
+
+console.log<span style="color: #2aa198;">(</span>p1.details<span style="color: #2aa198;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">"Hello. My name is Joshua and I am 20 years old."</span>
+Person.predict<span style="color: #2aa198;">(</span>p1<span style="color: #2aa198;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">"You are NOT a senior citizen."</span>
+</pre>
+</div>
+
+<p>
+/The bodies of class declarations and class expressions are executed in
+strict mode i.e. constructor, static and prototype methods, getter and
+setter functions are executed in strict mode./
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">class Person() {</span>
+<span style="color: #586e75;">//  </span><span style="color: #586e75;">...</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">}</span>
+<span style="color: #859900; font-weight: bold;">class</span> Employee <span style="color: #859900; font-weight: bold;">extends</span> Person <span style="color: #2aa198;">{</span>
+    constructor<span style="color: #b58900;">(</span>name, age, position, salary<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">super</span><span style="color: #268bd2;">(</span>name, age<span style="color: #268bd2;">)</span>;
+        <span style="color: #268bd2; font-weight: bold;">this</span>.position = position;
+        <span style="color: #268bd2; font-weight: bold;">this</span>.salary = salary;
+    <span style="color: #b58900;">}</span>
+
+    print<span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        console.log<span style="color: #268bd2;">(</span><span style="color: #2aa198;">`You are a ${this.position} and your income is $${this.salary}`</span><span style="color: #268bd2;">)</span>
+    <span style="color: #b58900;">}</span>
+
+    greet<span style="color: #b58900;">()</span> <span style="color: #b58900;">{</span>
+        <span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">greetings</span> = <span style="color: #859900; font-weight: bold;">super</span>.greet<span style="color: #268bd2;">()</span>;
+        console.log<span style="color: #268bd2;">(</span><span style="color: #2aa198;">`${greetings} I am a successful person!`</span><span style="color: #268bd2;">)</span>;
+    <span style="color: #b58900;">}</span>
+<span style="color: #2aa198;">}</span>
+
+p2.print<span style="color: #2aa198;">()</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">You are a Director and your income is 15000</span>
+Person.predict<span style="color: #2aa198;">(</span>p2<span style="color: #2aa198;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">"You are a senior citizen."</span>
+p2.greet<span style="color: #2aa198;">()</span> <span style="color: #586e75;">// </span><span style="color: #586e75;">Hello. My name is John and I am 70 years old. I am a successful person!</span>
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-promises">
+<h2 id="promises"><a id="org4c2d5c5"></a><span class="section-number-2">5</span> Promises</h2>
+<p>
+Before talking about promises, let's look at the following pseudocode of
+a web client making 2 AJAX requests:
+</p>
+
+<pre class="example">
+1. Request data from server
+2. Process the data returned from the server
+3. Render the processed data in a dropdown list
+4. Request another data from server
+5. Process the data returned from the server
+6. Render the processed data in a table
+</pre>
+
+<p>
+As you can see from the pseudocode above, the instructions given is
+executed in a sequential order (a synchronous operation). But what might
+not be obvious here is that when an AJAX request is made, it might take
+the server awhile to return a response(or none could be returned
+either). That would mean that your code will be stuck waiting for the
+server's response and none of the code below it will execute unless the
+server's response is returned. In the context of client side web
+development with JS, that would mean that your site might take a longer
+time to be ready before your users can start interacting with it.
+</p>
+
+<p>
+Now let's look at another set of pseudocode doing the same thing (albeit
+differently):
+</p>
+
+<pre class="example">
+1. Request data from server and proceed to execute step 4. Only execute steps 2 and 3 when server returns a response.
+2. Process the data returned from the server
+3. Render the processed data in a dropdown list
+
+4. Request another data from server, only execute steps 5 and 6 when server returns a response.
+5. Process the data returned from the server
+6. Render the processed data in a table
+</pre>
+
+<p>
+As you can see from the second pseudocode above, once the first AJAX
+request is made to the server, we proceed to execute the second AJAX
+request. Steps (2, 3) and (5, 6) will only execute when steps 1 and 6
+recieves a response from the server respectively. This is an example of
+an asynchronous operation whereby code does not execute in a sequential
+order. In the context of client side web development with JS, that would
+mean that the pseudocode above appears to be executing the two AJAX
+request concurrently, allowing your web page to be ready for users to
+interact with much quickly compared to the first pseudocode example.
+</p>
+
+<p>
+While the above examples do mention about how fast it takes for the
+website to get ready before users can start interacting with it, the
+point to draw here is the fashion in which code is executed. JS is
+single threaded, hence, a sequential operation involving a task that
+might not immediately return a result (e.g. I/O, networking operations,
+etc) will block the execution of the remaining code while waiting for
+some response like in pseudocode example 1. Pseudocode example 2
+however, illustrates how JS effectively deals with tasks that takes
+awhile to return a result without blocking the execution of the other
+codes below by executing code in an asynchronous manner. In code speak,
+a way to model how JS deals with such asynchronous operations is through
+the use of promises.
+</p>
+
+<p>
+Now let's enter the promise. A promise is simply a JS object that may
+return a single value in the future such as a resolved value or a reason
+why it fails to return a resolved value. As such, a promise has 3
+possible states, fufilled, rejected, or pending.
+</p>
+
+<p>
+To illustrate the states of a promise (and how to use them), let's look
+at the following example:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">When we invoke the fetch API (a promise) to request data from a server endpoint,</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">We can say that the current state of this promise is pending.</span>
+<span style="color: #586e75;">// </span><span style="color: #586e75;">At this state, #2 will execute first.</span>
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">#1</span>
+fetch<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'www.example.com/api/v3'</span><span style="color: #2aa198;">)</span>;    
+    .then<span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">response</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">When the request is complete, the promise is fufilled</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">And this callback function will be invoked with a single</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">argument representing the resolved value from the successful request</span>
+        console.log<span style="color: #268bd2;">(</span>response<span style="color: #268bd2;">)</span>;
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+    .<span style="color: #859900; font-weight: bold;">catch</span><span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">err</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">However if the request would to fail, the promise will be rejected</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">And this callback function will be invoked with a single</span>
+        <span style="color: #586e75;">// </span><span style="color: #586e75;">argument representing the reason why the Fetch API fails to complete your request successfully</span>
+        console.log<span style="color: #268bd2;">(</span>err<span style="color: #268bd2;">)</span>;
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">#2</span>
+console.log<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'I will likely show first before the operation above completes'</span><span style="color: #2aa198;">)</span>;
+</pre>
+</div>
+
+<p>
+Now that you know what a promise is and how to use them, let's look at
+how to write a promise
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">Import file system module from nodejs</span>
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">fs</span> = require<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'fs'</span><span style="color: #2aa198;">)</span>;
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">This function takes a filename as an argument and returns the file content</span>
+<span style="color: #859900; font-weight: bold;">function</span> <span style="color: #268bd2;">readFile</span><span style="color: #2aa198;">(</span><span style="color: #268bd2;">filename</span><span style="color: #2aa198;">)</span> <span style="color: #2aa198;">{</span>
+    <span style="color: #586e75;">// </span><span style="color: #586e75;">This promise wraps over the readFile function of the fs module</span>
+    <span style="color: #859900; font-weight: bold;">return</span> <span style="color: #859900; font-weight: bold;">new</span> <span style="color: #b58900;">Promise</span><span style="color: #b58900;">(</span><span style="color: #268bd2;">(</span>resolve, reject<span style="color: #268bd2;">)</span> =&gt; <span style="color: #268bd2;">{</span>
+        fs.readFile<span style="color: #6c71c4;">(</span>filename, <span style="color: #859900;">(</span>err, file<span style="color: #859900;">)</span> =&gt; <span style="color: #859900;">{</span>
+            <span style="color: #859900; font-weight: bold;">if</span> <span style="color: #b58900;">(</span>err<span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+                <span style="color: #586e75;">// </span><span style="color: #586e75;">Reject promise with error</span>
+                <span style="color: #859900; font-weight: bold;">return</span> reject<span style="color: #268bd2;">(</span>err<span style="color: #268bd2;">)</span>;
+            <span style="color: #b58900;">}</span>
+            <span style="color: #586e75;">// </span><span style="color: #586e75;">Resolve promise with file</span>
+            resolve<span style="color: #b58900;">(</span>file<span style="color: #b58900;">)</span>;
+        <span style="color: #859900;">}</span><span style="color: #6c71c4;">)</span>;
+    <span style="color: #268bd2;">}</span><span style="color: #b58900;">)</span>;
+<span style="color: #2aa198;">}</span>
+
+<span style="color: #586e75;">// </span><span style="color: #586e75;">Invoke readFile function</span>
+readFile<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'file.txt'</span><span style="color: #2aa198;">)</span>
+    .then<span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">result</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        console.log<span style="color: #268bd2;">(</span>result<span style="color: #268bd2;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">file.text's content</span>
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+    .<span style="color: #859900; font-weight: bold;">catch</span><span style="color: #2aa198;">(</span><span style="color: #859900; font-weight: bold;">function</span> <span style="color: #b58900;">(</span><span style="color: #268bd2;">err</span><span style="color: #b58900;">)</span> <span style="color: #b58900;">{</span>
+        console.log<span style="color: #268bd2;">(</span>err<span style="color: #268bd2;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">log error</span>
+    <span style="color: #b58900;">}</span><span style="color: #2aa198;">)</span>
+</pre>
+</div>
+
+<p>
+This concludes the section on promises.
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgf73225b">
+<h2 id="orgf73225b"><span class="section-number-2">6</span> Generic tooling</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+</section>
+<section id="slide-org97fc4b6">
+<h3 id="org97fc4b6"><span class="section-number-3">6.1</span> ESLint</h3>
+<p>
+Fundamentally, ESLint is a utility that enforces a collection of rules (a
+style guide) that your JS code needs to adhere to. By enforcing these set of
+rules, ESLint is able to catch errors that you might have failed to notice
+when writing JS (e.g. a dangling comma, syntax errors, accidental globals).
+</p>
+
+<p>
+ESLint further enforces code formatting conventions, prompting you to write
+code in a uniform fashion that can be easily understood and maintained by
+your team.
+</p>
+
+<p>
+Moreover, ESLint is plugin based, and hence, different kinds of style guides
+can be configured for your project to catch JS errors and enforce formatting
+conventions.
+</p>
+
+<p>
+Here's a quick look of ESLint in action in Visual Studio Code:
+</p>
+
+
+<div class="figure">
+<p><img src="images/eslint-in-action.png" alt="eslint-in-action.png" />
+</p>
+</div>
+
+<p>
+To sum up, ESLint is a utility implemeted in JS projects to ensure that the
+code you write meets the rules it enforces, so as to keep your code base
+consistent and as error free as possbile.
+</p>
+
+</section>
+<section id="slide-orgc43e878">
+<h3 id="orgc43e878"><span class="section-number-3">6.2</span> Webpack</h3>
+<p>
+In the context of JS projects, Webpack is a module bundler that travels a
+project, forming a graph of its dependencies, then bundling all these
+dependencies into a bundle to be served to users.
+</p>
+
+<p>
+Back in the olden days, we used to include javascript files using the
+<code>&lt;script&gt;</code> tag.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-html">&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"some-file-somewhere.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+</pre>
+</div>
+
+<p>
+If we have a bunch of scripts, they'd end up something like this. The below
+example is stolen from our beloved WebA project, including the <code>link</code> tags
+as well.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-html">&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap/dist/css/bootstrap.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap-table/dist/bootstrap-table.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt; 
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/css/site.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/css/sticky_footer.css"</span> /&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/noty/lib/noty.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span>/&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/DataTables-1.10.16/css/jquery.dataTables.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span>/&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span> /&gt;
+&lt;<span style="color: #268bd2;">link</span> <span style="color: #268bd2;">href</span>=<span style="color: #2aa198;">"~/lib/bootstrap-timepicker/css/timepicker.css"</span> <span style="color: #268bd2;">rel</span>=<span style="color: #2aa198;">"stylesheet"</span>/&gt;
+
+
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/jquery/dist/jquery.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/jquery-validation/dist/jquery.validate.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/jquery-validation/dist/additional-methods.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/js-cookie/src/js.cookie.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap/dist/js/bootstrap.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap-table/dist/bootstrap-table.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/noty/lib/noty.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/moment/min/moment.min.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/he/he.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap-table-contextmenu/dist/bootstrap-table-contextmenu.min.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/DataTables-1.10.16/js/jquery.dataTables.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+&lt;<span style="color: #268bd2;">script</span> <span style="color: #268bd2;">src</span>=<span style="color: #2aa198;">"~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"</span>&gt;&lt;/<span style="color: #268bd2;">script</span>&gt;
+</pre>
+</div>
+
+<p>
+WebA was a simple project if you compare it to the scale of web applications
+that are around. Have you ever inspected the source of some older ecommerce
+site and seen 30 script tags alone?
+</p>
+
+<p>
+Each script ends up adding something else to the global scope. I'm not going
+in depth into why this is bad, but just know that this potentially causes
+some problems and conflicts.
+</p>
+
+<p>
+This is one of the problem that webpack solves. Now, instead of including
+script files one by one, webpack builds a <i>dependency graph</i> from all the
+modules you <i>require</i>, starting from an entry point.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">app.js</span>
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">express</span> = require<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'express'</span><span style="color: #2aa198;">)</span>;
+
+<span style="color: #859900; font-weight: bold;">const</span> <span style="color: #268bd2;">app</span> = express<span style="color: #2aa198;">()</span>;
+</pre>
+</div>
+<p>
+In the above example, let's assume app.js was the entry point for Webpack.
+With the <code>require</code>, Webpack now knows this app <i>requires</i> express. It'll go
+into express and look into the library.
+</p>
+
+<p>
+Here's the source for <code>index.js</code> for Express.
+</p>
+<div class="org-src-container">
+
+<pre  class="src src-js"><span style="color: #586e75;">/*</span>
+<span style="color: #586e75;"> * express</span>
+<span style="color: #586e75;"> * Copyright(c) 2009-2013 TJ Holowaychuk</span>
+<span style="color: #586e75;"> * Copyright(c) 2013 Roman Shtylman</span>
+<span style="color: #586e75;"> * Copyright(c) 2014-2015 Douglas Christopher Wilson</span>
+<span style="color: #586e75;"> * MIT Licensed</span>
+<span style="color: #586e75;"> */</span>
+
+<span style="color: #2aa198;">'use strict'</span>;
+
+module.exports = require<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'./lib/express'</span><span style="color: #2aa198;">)</span>;
+</pre>
+</div>
+
+<p>
+From here, it'll continue on into <code>./lib/express</code> and on and on, until it
+finally has everything it needs. It'll then bundle all this stuff up.
+</p>
+
+<p>
+Webpack's capabilities aren't simply limited to bundling. Another very
+popular feature is Hot Module Replacement, where it can "hotswap" modules
+while the application is still running, without needing a full reload. This
+speeds up development <b>tremendously</b>. Remember when you were doing ASP .NET
+Core, and you had to restart every time you made a change to the server
+code? Webpack is able to swap those out without restarting. In fact, you can
+configure Webpack to reload your application as soon as you save your
+changes.
+</p>
+
+<p>
+In Node.js projects nowadays, Webpack is often pre-configured in many
+templates. For example, the cli tool <code>create-react-app</code> allows you to
+generate a React project with a all the webpack configuration done.
+Generally, it's unlikely you'll need to configure Webpack manually (thank
+god) but it's always helpful to know how things are bundled together.
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="file:///C:/Users/Loh Jing Yen/org/reveal.js/lib/js/head.min.js"></script>
+<script src="file:///C:/Users/Loh Jing Yen/org/reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'file:///C:/Users/Loh Jing Yen/org/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: 'file:///C:/Users/Loh Jing Yen/org/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///C:/Users/Loh Jing Yen/org/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///C:/Users/Loh Jing Yen/org/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'file:///C:/Users/Loh Jing Yen/org/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
