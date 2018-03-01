@@ -135,7 +135,61 @@ is almostly due to cleaner and simpler syntax. Will there be performance differe
 Probably the ECMAScript engine rendering the Javascript codes will be able to optimize a little better but 
 there will probably be little to no significant difference in the way the script performs. Another reason 
 why you should Classes is due to the fact that it is much easier to set up inheritance using the new ES6
-syntax.
+syntax. The "methods" provided by Classes look like those familiar to developers of class-based languages 
+such as C#, Java, C++ etc. However, they are not the same. JavaScript remains prototype-based.
+
+
+### Prototype
+As mentioned in the general description of this section, ES6 Classes are syntactic sugar for the prototype chain system. To give an example:
+
+```js
+var Person = function(name, age)  {
+  if(!(this instanceof Person))  {
+    throw  new  Error("Use the 'new' keyword when constructing a Person object.");  
+  }
+  this.name = name;
+  this.age = age;  
+};
+
+// Add properties in Person function's prototype
+Person.prototype.details = function() {
+  alert(`Name: ${this.name}\nAge: ${this.age}`);
+};
+
+var user = new  Person('Joshua', 21)
+user.details()	
+```
+
+As you can see, the 'Person' variable is an instance of an object. It currently has a function property called details. When trying to access a property of an object,the property will not only pursue on the object but on the prototype of the object, the prototype of the prototype, and so on until the end of the prototype chain is reached or there is another matching property name in the prototypical chain. To elaborate more about this, go through the following code snippet:
+
+```js
+let Character = function () {
+   this.name = '_blank_';
+   this.age = 0;
+}
+
+let newPlayer = new Character(); // {name: '_blank_', age: 0}
+//add properties in Character function's prototype
+
+Character.prototype.age = 20;
+Character.prototype.gender = 'Unknown';
+
+console.log(newPlayer.name) // _blank_
+
+console.log(newPlayer.age) // 0
+// The prototype also has a 'age' property of value 20 but it's not visited. 
+// This is called "property shadowing.
+
+console.log(newPlayer.gender); // Unknown
+// newPlayer object does not own the property 'gender'. Hence, check
+// the prototype chain newPlayer.[[Prototype]] and the value is 'Unknown'.
+
+console.log(newPlayer.class) // undefined
+// newPlayer object does not own the property 'class'.  Hence, check
+// the prototype chain newPlayer.[[Prototype]].[[Prototype]] and the value is 'null'
+// no property found, return undefined.
+```
+Each object in Javascript has a private property which stores an association link to another object called its prototype. That prototype object has a prototype of its own, and so on until an object is reached with null as its prototype. Because null has no prototype, it serves as the final link in this prototype chain. 
 
 ## Promises<a id="sec-2-4"></a>
 
