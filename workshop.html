@@ -704,8 +704,10 @@ substitute the traditional <code>function</code> keyword.
 <section>
 <section id="slide-orgd705ac6">
 <h2 id="orgd705ac6"><span class="section-number-2">4</span> "Classes"</h2>
+</section>
+<section>
 <p>
-Classes in Javascript was first introduced in ECMAScript® 2015. They are
+<!-- Classes in Javascript was first introduced in ECMAScript® 2015. They are
 essentially <b>syntactical sugar</b> over Javascript's inheritance with
 prototype chaining. A reason why you would consider using ES6 Classes is
 almostly due to cleaner and simpler syntax. Will there be performance
@@ -716,15 +718,19 @@ way the script performs. Another reason why you should Classes is due to
 the fact that it is much easier to set up inheritance using the new ES6
 syntax. The "methods" provided by Classes look like those familiar to
 developers of class-based languages such as C#, Java, C++ etc. However,
-they are not the same. JavaScript remains prototype-based.
+they are not the same. JavaScript remains prototype-based. -->
+Classes in Javascript was first introduced in ECMAScript® 2015.
+<!-- They are essentially <b>syntactical sugar</b> over Javascript's inheritance
+with prototype chaining. -->
 </p>
 
 </section>
 <section id="slide-prototype">
 <h3 id="prototype"><a id="orge86ceee"></a><span class="section-number-3">4.1</span> Prototype</h3>
 <p>
-As mentioned in the general description of this section, ES6 Classes are
-syntactic sugar for the prototype chain system. To give an example:
+<!-- As mentioned in the general description of this section, ES6 Classes are
+syntactic sugar for the prototype chain system. To give an example: -->
+ES6 Classes are syntactic sugar for the prototype chain system.
 </p>
 
 <div class="org-src-container">
@@ -746,8 +752,10 @@ Person.<span style="color: #268bd2; font-weight: bold;">prototype</span>.details
 user.details<span style="color: #2aa198;">()</span>  
 </pre>
 </div>
+</section>
+<section>
 
-<p>
+<!-- <p>
 As you can see, the 'Person' variable is an instance of an object. It
 currently has a function property called 'details'. When accessing a
 property of an object,the property will not only pursue on the object
@@ -755,7 +763,7 @@ but on the prototype of the object, the prototype of the prototype, and
 so on until the end of the prototype chain is reached or there is
 another matching property name in the prototypical chain. To elaborate
 more about concept, go through the following code snippet:
-</p>
+</p> -->
 
 <div class="org-src-container">
 
@@ -786,6 +794,8 @@ console.log<span style="color: #2aa198;">(</span>newPlayer.<span style="color: #
 <span style="color: #586e75;">// </span><span style="color: #586e75;">no property found, return undefined.</span>
 </pre>
 </div>
+</section>
+<section>
 
 <p>
 Each object in Javascript has a private property which stores an
@@ -806,12 +816,16 @@ resources to find out more about
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class expressions</a>.
 </p>
 
-<p>
+</section>
+<section>
+<!-- <p>
 It is easy to set up a class instance and establish inheritance
 hierarchies using the new ES6 syntax.The code snippet below creates a
 class called 'Person' and defining the associating the respective
 function properties to the object:
-</p>
+It is simple to set up a class instance and establish inheritance hierarchies
+using the new ES6 syntax.
+</p> -->
 
 <div class="org-src-container">
 
@@ -847,11 +861,15 @@ console.log<span style="color: #2aa198;">(</span>p1.details<span style="color: #
 Person.predict<span style="color: #2aa198;">(</span>p1<span style="color: #2aa198;">)</span>; <span style="color: #586e75;">// </span><span style="color: #586e75;">"You are NOT a senior citizen."</span>
 </pre>
 </div>
+</section>
+<section>
 
 <p>
-/The bodies of class declarations and class expressions are executed in
+<!-- The bodies of class declarations and class expressions are executed in
 strict mode i.e. constructor, static and prototype methods, getter and
-setter functions are executed in strict mode./
+setter functions are executed in strict mode. -->
+The bodies of class declarations and class expressions are executed in
+strict mode.
 </p>
 
 <div class="org-src-container">
@@ -887,6 +905,8 @@ p2.greet<span style="color: #2aa198;">()</span> <span style="color: #586e75;">//
 <section>
 <section id="slide-promises">
 <h2 id="promises"><a id="org4c2d5c5"></a><span class="section-number-2">5</span> Promises</h2>
+</section>
+<section>
 <p>
 Before talking about promises, let's look at the following pseudocode of
 a web client making 2 AJAX requests:
@@ -901,6 +921,8 @@ a web client making 2 AJAX requests:
 6. Render the processed data in a table
 </pre>
 
+</section>
+<!-- <section>
 <p>
 As you can see from the pseudocode above, the instructions given is
 executed in a sequential order (a synchronous operation). But what might
@@ -913,6 +935,8 @@ development with JS, that would mean that your site might take a longer
 time to be ready before your users can start interacting with it.
 </p>
 
+</section> -->
+<section>
 <p>
 Now let's look at another set of pseudocode doing the same thing (albeit
 differently):
@@ -928,6 +952,8 @@ differently):
 6. Render the processed data in a table
 </pre>
 
+</section>
+<!-- <section>
 <p>
 As you can see from the second pseudocode above, once the first AJAX
 request is made to the server, we proceed to execute the second AJAX
@@ -955,13 +981,24 @@ a way to model how JS deals with such asynchronous operations is through
 the use of promises.
 </p>
 
-<p>
+</section> -->
+<section>
+<!-- <p>
 Now let's enter the promise. A promise is simply a JS object that may
 return a single value in the future such as a resolved value or a reason
 why it fails to return a resolved value. As such, a promise has 3
 possible states, fufilled, rejected, or pending.
+</p> -->
+<p>
+A promise is simply a JS object that may return a single value in the future
+such as a resolved value or a reason why it fails to return a resolved value.
+</p>
+<p>
+As such, a promise has 3 possible states, fufilled, rejected, or pending.
 </p>
 
+</section>
+<section>
 <p>
 To illustrate the states of a promise (and how to use them), let's look
 at the following example:
@@ -993,11 +1030,16 @@ console.log<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'
 </pre>
 </div>
 
-<p>
+</section>
+<section>
+<!-- <p>
 Now that you know what a promise is and how to use them, let's look at
 how to write a promise
-</p>
+</p> -->
+<h3>Writing Promises</h3>
 
+</section>
+<section>
 <div class="org-src-container">
 
 <pre  class="src src-js"><span style="color: #586e75;">// </span><span style="color: #586e75;">Import file system module from nodejs</span>
@@ -1029,10 +1071,12 @@ readFile<span style="color: #2aa198;">(</span><span style="color: #2aa198;">'fil
 </pre>
 </div>
 
+</section>
+<!-- <section>
 <p>
 This concludes the section on promises.
 </p>
-</section>
+</section> -->
 </section>
 <section>
 <section id="slide-orgf73225b">
@@ -1042,25 +1086,35 @@ This concludes the section on promises.
 </section>
 <section id="slide-org97fc4b6">
 <h3 id="org97fc4b6"><span class="section-number-3">6.1</span> ESLint</h3>
+</section>
+<section>
 <p>
-Fundamentally, ESLint is a utility that enforces a collection of rules (a
+<!-- Fundamentally, ESLint is a utility that enforces a collection of rules (a
 style guide) that your JS code needs to adhere to. By enforcing these set of
 rules, ESLint is able to catch errors that you might have failed to notice
-when writing JS (e.g. a dangling comma, syntax errors, accidental globals).
+when writing JS (e.g. a dangling comma, syntax errors, accidental globals). -->
+ESLint is a utility that enforces a collection of rules (a
+style guide) that your JS code needs to adhere to.
 </p>
 
+</section>
+<section>
 <p>
 ESLint further enforces code formatting conventions, prompting you to write
 code in a uniform fashion that can be easily understood and maintained by
 your team.
 </p>
 
+</section>
+<section>
 <p>
 Moreover, ESLint is plugin based, and hence, different kinds of style guides
 can be configured for your project to catch JS errors and enforce formatting
 conventions.
 </p>
 
+</section>
+<section>
 <p>
 Here's a quick look of ESLint in action in Visual Studio Code:
 </p>
@@ -1071,6 +1125,8 @@ Here's a quick look of ESLint in action in Visual Studio Code:
 </p>
 </div>
 
+</section>
+<section>
 <p>
 To sum up, ESLint is a utility implemeted in JS projects to ensure that the
 code you write meets the rules it enforces, so as to keep your code base
@@ -1248,6 +1304,10 @@ Generally, it's unlikely you'll need to configure Webpack manually (thank
 god) but it's always helpful to know how things are bundled together.
 </p>
 </section>
+</section>
+<section>
+<img src="images/joshua.jpg" alt="Joshua" height="400">
+<h1>Thank you!</h1>
 </section>
 </div>
 </div>
